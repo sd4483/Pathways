@@ -1,0 +1,52 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="{% static 'src/styles.css' %}">
+    </head>
+<!-- templates/shared/header.html -->
+<header class="bg-yellow-800 rounded m-2 font-mono">
+    <div class="flex justify-between content-center py-2 mx-4">
+        <div class="text-white text-lg font-medium">Pathways</div>
+        <div class="absolute inset-x-0 top-y-0 flex items-center justify-center z-10">
+            <div class="text-white">{{ user.username }}</div>
+        </div>
+        {% if not user.is_authenticated %}
+        <div class="grid grid-cols-4 gap-6 justify-items-center text-white text-base font-medium z-20">
+            <div>
+                <a href="{% url 'view_pathway'%}">View</a>
+            </div>
+            <div>
+                <a href="{% url 'create_pathway' %}">Create</a>
+            </div>
+            <div>
+                <a href="{% url 'login' %}">Login</a>
+            </div>
+            <div>
+                <a href="{% url 'register' %}">Register</a>
+            </div>
+        </div>
+        {% else %}
+        <div class="grid grid-cols-3 gap-6 justify-items-center text-white text-base font-medium z-20">
+            <div>
+                <a href="{% url 'view_pathway'%}">View</a>
+            </div>
+            <div>
+                <a href="{% url 'create_pathway' %}">Create</a>
+            </div>
+            <div>
+                <a href="{% url 'logout' %}">Logout</a>
+            </div>
+        </div>
+        {% endif %}
+
+    </div>
+</header>
+<body class="font-mono bg-orange-100">
+    <!-- This is where content from child templates will be inserted -->
+    {% block content %}
+    {% endblock %}
+</body>
+</html>
+

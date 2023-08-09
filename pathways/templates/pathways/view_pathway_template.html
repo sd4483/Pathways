@@ -1,0 +1,39 @@
+{% extends 'shared/header.html' %}
+
+{% block content %}
+    <div class="flex justify-center py-6">
+        <div class="w-full max-w-3xl mx-auto bg-card p-4 rounded">
+            <h2 class="text-xl font-bold mb-6 text-gray-700 text-center">Pathways Created</h2>
+            
+            {% for pathway in pathways %}
+
+            <div class="flex justify-between py-2 px-4 bg-yellow-800 rounded text-gray-200 mb-2 align-middle">
+                <div>
+                    <a href="{% url 'single_pathway' pathway.id %}">{{ pathway.title }}</a>
+                </div>
+                <div>
+                    <form method="post" action="{% url 'delete_pathway' pathway.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="bg-red-800 hover:bg-red-900 px-2 text-sm rounded">Delete</button>
+                    </form>
+                </div>
+            </div>
+                    
+            {% empty %}
+                No pathways yet.
+            {% endfor %}
+            
+        </div>
+    </div>
+    <script>
+        var deleteButtons = document.querySelectorAll('.delete-button');
+        deleteButtons.forEach(function(button) {
+            button.addEventListener('click', function(event) {
+                if (!confirm('Are you sure you want to delete this pathway?')) {
+                    event.preventDefault();
+                }
+            });
+        });
+    </script>
+{% endblock %}
+

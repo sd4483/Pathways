@@ -1,0 +1,42 @@
+{% extends 'shared/header.html' %}
+
+{% block content %}
+
+<div class="flex justify-center py-6">
+    <div class="w-full max-w-xl mx-auto bg-[#E3CCAE] p-8 rounded">
+        <h2 class="text-xl font-bold mb-6 text-gray-700 text-center">Register</h2>
+        
+        <form method="post" class="space-y-6">
+            {% csrf_token %}
+            <div>
+                <label for="{{ form.username.id_for_label }}" class="block text-base font-medium text-gray-700">Username</label>
+                <input type="text" class="mt-1 py-2 pl-2 block w-full border border-gray-500 bg-[#E3CCAE]
+                focus:outline-none focus:border-gray-500 focus:ring-1 focus:ring-gray-500
+                focus:invalid:border-red-500 focus:invalid:ring-red-500
+                rounded text-base" id="{{ form.username.id_for_label }}" name="{{ form.username.html_name }}" value="{{ form.username.value|default_if_none:'' }}">
+                {{ form.username.errors }}
+            </div>
+            <div>
+                <label for="{{ form.password1.id_for_label }}" class="block text-base font-medium text-gray-700">Password</label>
+                <input type="password" class="mt-1 py-2 pl-2 block w-full border border-gray-500 bg-[#E3CCAE]
+                focus:outline-none focus:border-gray-500 focus:ring-1 focus:ring-gray-500
+                focus:invalid:border-red-500 focus:invalid:ring-red-500
+                rounded text-base" id="{{ form.password1.id_for_label }}" name="{{ form.password1.html_name }}" value="{{ form.password1.value|default_if_none:'' }}">
+                {{ form.password1.errors }}
+            </div>
+            <div>
+                <label for="{{ form.password2.id_for_label }}" class="block text-base font-medium text-gray-700">Confirm Password</label>
+                <input type="password" class="mt-1 py-2 pl-2 block w-full border border-gray-500 bg-[#E3CCAE]
+                focus:outline-none focus:border-gray-500 focus:ring-1 focus:ring-gray-500
+                focus:invalid:border-red-500 focus:invalid:ring-red-500
+                rounded text-base" id="{{ form.password2.id_for_label }}" name="{{ form.password2.html_name }}" value="{{ form.password2.value|default_if_none:'' }}">
+                {{ form.password2.errors }}
+            </div>
+            
+            <button type="submit" class="py-2 px-4 rounded-md shadow-sm text-base font-medium text-white bg-blue-800 hover:bg-blue-900">Register</button>
+        </form>
+
+    </div>
+</div>      
+
+{% endblock %}

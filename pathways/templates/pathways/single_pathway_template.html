@@ -1,0 +1,268 @@
+{% extends 'shared/header.html' %}
+
+{% block content %}
+    <div class="flex justify-center py-6">
+        <div class="w-full max-w-3xl mx-auto bg-card p-4 rounded">
+            <div class="divide-y divide-lighter-brownish">
+                <div class="flex justify-between mb-4">
+                    <h2 class="text-xl font-bold text-brownish capitalize">{{ pathway.title }}</h2>
+                    <div class="text-brownish text-sm">created by: {{ pathway.user }}</div>
+                </div>
+            
+                <div class="text-base text-brownish py-4">{{ pathway.description }}</div>
+
+                <div class="pseudo-element"></div>
+            </div>
+            
+
+            <div class="py-4 font-bold text-brownish">Add Resources</div>
+
+            <div class="grid grid-cols-4 gap-4 mb-4">
+                
+                <button type="button" class="bg-sky-800 px-2 py-1 rounded text-white" id="text-form-button">
+                    Text
+                </button>
+    
+                <button type="button" class="bg-amber-800 px-2 py-1 rounded text-white" id="image-form-button">
+                    Image
+                </button>
+    
+                <button type="button" class="bg-emerald-800 px-2 py-1 rounded text-white" id="file-form-button">
+                    File
+                </button>
+    
+                <button type="button" class="bg-indigo-700 px-2 py-1 rounded text-white" id="link-form-button">
+                    Link
+                </button>
+                
+            </div>
+
+            <div class="pt-4 pb-2 font-bold text-brownish">Resource Archive</div>
+            
+            
+            <div class="mb-4" id="text-form" hidden>
+                <form method="post" action="{% url 'text_resource' pathway_id=pathway.id %}">
+                    {% csrf_token %}
+                    <div class="p-4 bg-sky-800 rounded">
+                        <div class="flex justify-between">
+                            <p class="font-bold text-stone-100 mb-2">Add Text Resource</p>
+                            <button type="button" id="text-form-close" class="mb-2 bg-red-500 text-white px-1 rounded">close</button>
+                        </div>
+                        <label class="text-sm font-medium text-stone-100 mb-2">Title</label>
+                        {{ text_resource_form.title }}
+                        <label class="text-sm font-medium text-stone-100 mb-2">Content</label>
+                        {{ text_resource_form.content }}
+                        <button type="submit" name="text_resource" class="bg-lighter-brownish hover:bg-card mt-4 px-2 py-1 rounded">Add Text Resource</button>
+                    </div>
+                </form>
+            </div>
+            
+            
+            
+            <div class="mb-4" id="image-form" hidden>
+                <form method="post" enctype="multipart/form-data" action="{% url 'image_resource' pathway_id=pathway.id %}">
+                    {% csrf_token %}
+                    <div class="p-4 bg-amber-800 rounded">
+                        <div class="flex justify-between">
+                            <p class="font-bold text-stone-100 mb-2">Add Image Resource</p>
+                            <button type="button" id="image-form-close" class="mb-2 bg-red-500 text-white px-1 rounded">close</button>
+                        </div>
+                        <label class="text-sm font-medium text-stone-100 mb-2">Title</label>
+                        {{ image_resource_form.title }}
+                        <label class="text-sm font-medium text-stone-100 mb-2">Notes</label>
+                        {{ image_resource_form.notes }}
+                        <label class="text-sm font-medium text-stone-100 mb-2">Image</label>
+                        {{ image_resource_form.image }}
+                        <button type="submit" name="image_resource" class="bg-lighter-brownish hover:bg-card mt-4 px-2 py-1 rounded">Add Image Resource</button>
+                    </div>
+                </form>
+            </div>
+            
+
+            
+            <div class="mb-4" id="file-form" hidden>
+                <form method="post" enctype="multipart/form-data" action="{% url 'file_resource' pathway_id=pathway.id %}">
+                    {% csrf_token %}
+                    <div class="p-4 bg-emerald-800 rounded">
+                        <div class="flex justify-between">
+                            <p class="font-bold text-stone-100 mb-2">Add File Resource</p>
+                            <button type="button" id="file-form-close" class="mb-2 bg-red-500 text-white px-1 rounded">close</button>
+                        </div>
+                        <label class="text-sm font-medium text-stone-100 mb-2">Title</label>
+                        {{ file_resource_form.title }}
+                        <label class="text-sm font-medium text-stone-100 mb-2">Notes</label>
+                        {{ file_resource_form.notes }}
+                        <label class="text-sm font-medium text-stone-100 mb-2">File</label>
+                        {{ file_resource_form.attachment }}
+                        <button type="submit" name="file_resource" class="bg-lighter-brownish hover:bg-card mt-4 px-2 py-1 rounded">Add File Resource</button>
+                    </div>
+                </form>
+            </div>
+            
+
+            
+            <div id="link-form" hidden>
+                <form method="post" action="{% url 'link_resource' pathway_id=pathway.id %}">
+                    {% csrf_token %}
+                    <div class="p-4 bg-indigo-800 rounded">
+                        <div class="flex justify-between">
+                            <p class="font-bold text-stone-100 mb-2">Add Link Resource</p>
+                            <button type="button" id="link-form-close" class="mb-2 bg-red-500 text-white px-1 rounded">close</button>
+                        </div>
+                        <label class="text-sm font-medium text-stone-100 mb-2">Title</label>
+                        {{ link_resource_form.title }}
+                        <label class="text-sm font-medium text-stone-100 mb-2">Notes</label>
+                        {{ link_resource_form.notes }}
+                        <label class="text-sm font-medium text-stone-100 mb-2">URL</label>
+                        {{ link_resource_form.url }}
+                        <button type="submit" name="link_resource" class="bg-lighter-brownish hover:bg-card mt-4 px-2 py-1 rounded">Add Link Resource</button>
+                    </div>
+                </form>
+            </div>
+            
+
+            <div>
+
+                <div class="p-4 bg-sky-800 rounded mt-4 text-stone-100">
+                    <button type="button" class="font-bold flex justify-between items-center w-full" id="text-resource-button">
+                        Text Resources
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 font-bold transform rotate-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </button>
+                
+                    <div id="text-resource-content" class="mt-4"> 
+                        {% for text_resource in pathway.text_resources.all %}
+                            <div class="mb-4 border rounded p-4">
+                                <div class="fs-6 fw-medium pb-3">{{ text_resource.title }}</div>
+                                <div>{{ text_resource.content|safe }}</div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>                
+                
+                <div class="p-4 bg-amber-800 rounded mt-4 text-stone-100">
+                    <button type="button" class="font-bold flex justify-between items-center w-full" id="image-resource-button">
+                        Image Resources
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 font-bold transform rotate-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </button>
+    
+                    <div id="image-resource-content" class="mt-4">
+                        {% for image_resource in pathway.image_resources.all %}
+                            <div class="mb-4 border rounded p-4">
+                                <div>{{ image_resource.title }}</div>
+                                <div>{{ image_resource.notes }}</div>
+                                <img class="rounded mt-2" src="{{ image_resource.image.url }}" alt="{{ image_resource.title }}">
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="p-4 bg-emerald-800 rounded mt-4 text-stone-100">
+                    <button type="button" class="font-bold flex justify-between items-center w-full" id="file-resource-button">
+                        File Resources
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 font-bold transform rotate-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </button>
+    
+                    <div id="file-resource-content" class="mt-4">
+                        {% for file_resource in pathway.file_resources.all %}
+                            <div class="mb-4 border rounded p-4">
+                                <div>{{ file_resource.title }}</div>
+                                <div>{{ file_resource.notes }}</div>
+                                <div><a href="{{ file_resource.attachment.url }}" target="_blank">{{ file_resource.attachment.url }}</a></div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+    
+                <div class="p-4 bg-indigo-800 rounded mt-4 text-stone-100">
+                    <button type="button" class="font-bold flex justify-between items-center w-full" id="link-resource-button">
+                        Link Resources
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 font-bold transform rotate-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </button>
+    
+                    <div id="link-resource-content" class="mt-4">
+                        {% for link_resource in pathway.link_resources.all %}
+                            <div class="mb-4 border rounded p-4">
+                                <div>{{ link_resource.title }}</div>
+                                <div>{{ link_resource.notes }}</div>
+                                <div class="truncate"><a href="{{ link_resource.url }}" target="_blank">{{ link_resource.url }}</a></div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+            </div>
+
+
+        </div>
+    </div>
+
+    <script>
+        const textForm = document.getElementById('text-form');
+        const imageForm = document.getElementById('image-form');
+        const fileForm = document.getElementById('file-form');
+        const linkForm = document.getElementById('link-form');
+
+        const textFormButton = document.getElementById('text-form-button');
+        const imageFormButton = document.getElementById('image-form-button');
+        const fileFormButton = document.getElementById('file-form-button');
+        const linkFormButton = document.getElementById('link-form-button');
+
+        const textFormClose = document.getElementById('text-form-close');
+        const imageFormClose = document.getElementById('image-form-close');
+        const fileFormClose = document.getElementById('file-form-close');
+        const linkFormClose = document.getElementById('link-form-close');
+
+        textFormButton.addEventListener('click', function() {
+            textForm.removeAttribute('hidden');
+        });
+        imageFormButton.addEventListener('click', function() {
+            imageForm.removeAttribute('hidden');
+        });
+        fileFormButton.addEventListener('click', function() {
+            fileForm.removeAttribute('hidden');
+        });
+        linkFormButton.addEventListener('click', function() {
+            linkForm.removeAttribute('hidden');
+        });
+
+        textFormClose.addEventListener('click', function() {
+        textForm.setAttribute('hidden', true);
+        });
+        imageFormClose.addEventListener('click', function() {
+        imageForm.setAttribute('hidden', true);
+        });
+        fileFormClose.addEventListener('click', function() {
+        fileForm.setAttribute('hidden', true);
+        });
+        linkFormClose.addEventListener('click', function() {
+        linkForm.setAttribute('hidden', true);
+        });
+
+        document.getElementById('text-resource-button').addEventListener('click', function() {
+            const textContent = document.getElementById('text-resource-content');
+            textContent.classList.toggle('hidden');
+        });
+        document.getElementById('image-resource-button').addEventListener('click', function() {
+            const imageContent = document.getElementById('image-resource-content');
+            imageContent.classList.toggle('hidden');
+        });
+        document.getElementById('file-resource-button').addEventListener('click', function() {
+            const fileContent = document.getElementById('file-resource-content');
+            fileContent.classList.toggle('hidden');
+        });
+        document.getElementById('link-resource-button').addEventListener('click', function() {
+            const linkContent = document.getElementById('link-resource-content');
+            linkContent.classList.toggle('hidden');
+        });
+
+    </script>
+        
+{% endblock %}
