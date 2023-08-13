@@ -1,0 +1,27 @@
+{% extends 'pathways/single_pathway_template.html' %}
+
+{% block pathway_content %}
+<div class="text-xl pb-2 font-bold">Settings for {{ pathway.title }}</div>
+
+{% if is_creator %}
+
+<div>
+    <form method="post">
+        {% csrf_token %}
+        
+        <div class="py-2">Pathway visibility:</div>
+        <div class="py-2">{{ form.visibility }}</div>
+        
+        <button type="submit" class="mt-2 py-2 px-4 rounded-md shadow-sm text-base font-medium text-white bg-blue-800 hover:bg-blue-900">Save</button>
+    </form>
+</div>
+
+{% else %}
+
+<div>
+    You don't have permission to access the settings for this pathway.
+</div>
+
+{% endif %}
+
+{% endblock %}

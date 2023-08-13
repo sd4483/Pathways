@@ -9,7 +9,7 @@
 
             <div class="flex justify-between py-2 px-4 bg-yellow-800 rounded text-gray-200 mb-2 align-middle">
                 <div>
-                    <a href="{% url 'single_pathway' pathway.id %}">{{ pathway.title }}</a>
+                    <a href="{% url 'resource_archive' pathway.id %}">{{ pathway.title }}</a>
                 </div>
                 <div>
                     <form method="post" action="{% url 'delete_pathway' pathway.id %}">

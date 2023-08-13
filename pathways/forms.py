@@ -6,6 +6,14 @@ class PathwayForm(forms.ModelForm):
         model = Pathway
         fields = ['title', 'description']
 
+class PathwaySettingsForm(forms.ModelForm):
+    class Meta:
+        model = Pathway
+        fields = ['visibility']
+        widgets = {
+            'visibility': forms.RadioSelect
+        }
+
 class LinkResourceForm(forms.ModelForm):
     class Meta:
         model = LinkResource
