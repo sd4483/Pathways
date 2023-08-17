@@ -1,0 +1,89 @@
+{% extends 'pathways/single_pathway_template.html' %}
+
+{% block pathway_content %}
+<div class="text-xl pb-2 font-bold">Discussion for {{ pathway.title }}</div>
+
+{% if user.is_authenticated %}
+    <!-- Comment form to post a new comment (not a reply) -->
+    <form method="post" action="{% url 'pathway_comments' pathway.id %}">
+        {% csrf_token %}
+        {{ form.text }}
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Post Comment</button>
+    </form>
+
+    <!-- Displaying the comments -->
+    {% for comment in comments %}
+    <div class="py-4">
+        <div class="flex justify-between">
+            <div class="font-bold text-gray-900">{{ comment.user.username }}</div>
+            <div class="text-sm text-gray-500">{{ comment.created_at|date:"d/m/Y, H:i" }}</div>
+        </div>
+        <p class="text-gray-700">{{ comment.text }}</p>
+        
+
+        <!-- Reply button and form for the comment -->
+        <a class="reply-button mt-2 text-gray-600 underline" data-comment-id="{{ comment.id }}" href="#">Reply</a>
+        
+        <form id="reply-form-{{ comment.id }}" class="mt-2 hidden" method="post" action="{% url 'pathway_comments_replies' comment.id %}">
+            {% csrf_token %}
+            {{ form.text}}
+            <button type="submit" class="mt-2 bg-blue-600 text-white px-4 py-2 rounded">Post Reply</button>
+        </form>
+        
+        <!-- Display replies to the comment (if any) -->
+        {% for reply in comment.comment_replies.all %}
+        <div class="mt-4 ml-4 border-l-2 border-gray-300 pl-4">
+            <div class="flex justify-between">
+                <div class="font-bold text-gray-900">{{ reply.user.username }}</div>
+                <div class="text-sm text-gray-500">{{ reply.created_at|date:"d/m/Y, H:i" }}</div>
+            </div>
+            <p class="text-gray-700">{{ reply.text }}</p>
+            
+
+            <!-- Reply button and form for the reply (nested reply) -->
+            <a class="reply-button mt-2 text-gray-600 underline" data-reply-id="{{ reply.id }}" href="#">Reply</a>
+
+            <form id="reply-form-{{ reply.id }}" class="mt-2 hidden" method="post" action="{% url 'pathway_comments_replies' reply.comment.id %}">
+                {% csrf_token %}
+                {{ form.text }}
+                <input type="hidden" name="parent_reply_id" value="{{ reply.id }}">
+                <button type="submit" class="mt-2 bg-blue-600 text-white px-4 py-2 rounded">Post Nested Reply</button>
+            </form>
+        </div>
+        {% endfor %}
+    </div>
+    {% endfor %}
+{% endif %}
+
+{% if not user.is_authenticated %}
+    <div class="text-base text-gray-700">
+        Only registered users can create pathways. <br>
+        If you are a registered user, login by clicking the button above.
+    </div>
+{% endif %}
+
+<!-- JavaScript to toggle reply forms -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.reply-button').forEach(function(button) {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                let commentId = button.getAttribute('data-comment-id');
+                let formId = 'reply-form-' + commentId;
+                
+                if (!document.getElementById(formId)) {
+                    // If it's a nested reply
+                    formId = 'nested-reply-form-' + commentId;
+                }
+
+                let form = document.getElementById(formId);
+                if (form) {
+                    form.classList.toggle('hidden');
+                }
+            });
+        });
+    });
+</script>
+
+{% endblock %}

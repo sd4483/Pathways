@@ -29,7 +29,13 @@ class Comment(models.Model):
     text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     parent_comment = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE, related_name="replies")
-    depth = models.PositiveIntegerField(default=1)
+
+class Reply(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    comment = models.ForeignKey(Comment, related_name="comment_replies", on_delete=models.CASCADE)
+    text = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    parent_reply = models.ForeignKey('self', null=True, blank=True, on_delete=models.SET_NULL)
 
 
 class ImageResource(models.Model):

@@ -4,8 +4,8 @@
     <div class="flex justify-center">
         <div class="mx-4 mb-4 w-full">
             <div class="grid grid-cols-4 gap-4">
-                <div class="flex flex-col gap-4 text-white bg-gray-950 rounded p-4 min-h-screen">
-                    <div class="divide-y divide-lighter-brownish rounded">
+                <div class="flex flex-col gap-4 text-black bg-slate-200 rounded p-4 min-h-screen">
+                    <div class="divide-y divide-slate-800 rounded">
                         <div class="text-xl font-bold capitalize mb-4">{{ pathway.title }}</div>
                         <div class="flex justify-between py-4">
                             <div>{{ pathway.user }}</div>
@@ -14,29 +14,33 @@
                         <div class="pseudo-element"></div>
                     </div>
 
-                    <div class="p-2 bg-white text-gray-950 rounded">{{ pathway.votes }}</div>
                     
-                    <div class="grid grid-cols-2 gap-2">    
-                        <form method="post" action="{% url 'upvote_pathway' pathway.id %}">
-                            {% csrf_token %}
-                            <button type="submit" class="bg-blue-500 p-2 rounded w-full">Upvote</button>
-                        </form>
-                        <form method="post" action="{% url 'downvote_pathway' pathway.id %}">
-                            {% csrf_token %}
-                            <button type="submit" class="bg-red-500 p-2 rounded w-full">Downvote</button>
-                        </form>
+                    
+                    <div class="grid grid-cols-7 gap-4">
+                        <div class="p-2 bg-white text-gray-950 rounded justify-self-center">{{ pathway.votes }}</div> 
+                        <div class="grid grid-cols-2 gap-4 col-span-6 text-white">
+                            <form method="post" action="{% url 'upvote_pathway' pathway.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="bg-blue-500 p-2 rounded w-full">Upvote</button>
+                            </form>
+                            <form method="post" action="{% url 'downvote_pathway' pathway.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="bg-red-500 p-2 rounded w-full">Downvote</button>
+                            </form>
+                        </div>   
                     </div>
 
-                    <div class="bg-gray-800 p-3 rounded">
+                    <div class="bg-slate-300 p-3 rounded">
                         <a href="{% url 'resource_archive' pathway.id %}">Resources</a>
                     </div>
-                    <div class="bg-gray-800 p-3 rounded">Discussion</div>
-                    <div class="bg-gray-800 p-3 rounded">
+                    <div class="bg-slate-300 p-3 rounded">
+                        <a href="{% url 'pathway_comments' pathway.id %}">Discussion</a></div>
+                    <div class="bg-slate-300 p-3 rounded">
                         <a href="{% url 'pathway_settings' pathway.id %}">Settings</a>
                     </div>
                     
                 </div>
-                <div class="col-span-3 p-4">
+                <div class="col-span-3 p-4 text-black">
                     {% block pathway_content %}
                     
                     {% endblock %}

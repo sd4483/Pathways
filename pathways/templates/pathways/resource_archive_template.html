@@ -8,19 +8,19 @@
 
     <div class="grid grid-cols-4 gap-4 mb-4">
         
-        <button type="button" class="bg-sky-800 px-2 py-1 rounded text-white" id="text-form-button">
+        <button type="button" class="bg-slate-300 px-2 py-1 rounded text-black" id="text-form-button">
             Text ✍🏼
         </button>
 
-        <button type="button" class="bg-amber-800 px-2 py-1 rounded text-white" id="image-form-button">
+        <button type="button" class="bg-slate-300 px-2 py-1 rounded text-black" id="image-form-button">
             Image 🏞️
         </button>
 
-        <button type="button" class="bg-emerald-800 px-2 py-1 rounded text-white" id="file-form-button">
+        <button type="button" class="bg-slate-300 px-2 py-1 rounded text-black" id="file-form-button">
             File 📑
         </button>
 
-        <button type="button" class="bg-indigo-700 px-2 py-1 rounded text-white" id="link-form-button">
+        <button type="button" class="bg-slate-300 px-2 py-1 rounded text-black" id="link-form-button">
             Link 🔗
         </button>
         
@@ -30,16 +30,16 @@
     <div class="mb-4" id="text-form" hidden>
         <form method="post" action="{% url 'text_resource' pathway_id=pathway.id %}">
             {% csrf_token %}
-            <div class="p-4 bg-sky-800 rounded">
+            <div class="p-4 bg-slate-300 text-black rounded">
                 <div class="flex justify-between">
-                    <p class="font-bold text-stone-100 mb-2">Add Text Resource</p>
-                    <button type="button" id="text-form-close" class="mb-2 bg-red-500 text-white px-1 rounded">close</button>
+                    <p class="font-bold mb-2">Add Text Resource</p>
+                    <button type="button" id="text-form-close" class="mb-2 bg-red-500 text-white px-2 py-1 rounded">close</button>
                 </div>
-                <label class="text-sm font-medium text-stone-100 mb-2">Title</label>
+                <label class="text-sm font-medium mb-2">Title</label>
                 {{ text_resource_form.title }}
-                <label class="text-sm font-medium text-stone-100 mb-2">Content</label>
+                <label class="text-sm font-medium mb-2">Content</label>
                 {{ text_resource_form.content }}
-                <button type="submit" name="text_resource" class="bg-lighter-brownish hover:bg-card mt-4 px-2 py-1 rounded">Add Text Resource</button>
+                <button type="submit" name="text_resource" class="bg-blue-500 hover:bg-blue-600 mt-4 px-2 py-1 text-white rounded">Add Text Resource</button>
             </div>
         </form>
     </div>
@@ -49,18 +49,18 @@
     <div class="mb-4" id="image-form" hidden>
         <form method="post" enctype="multipart/form-data" action="{% url 'image_resource' pathway_id=pathway.id %}">
             {% csrf_token %}
-            <div class="p-4 bg-amber-800 rounded">
+            <div class="p-4 bg-slate-300 text-black rounded">
                 <div class="flex justify-between">
-                    <p class="font-bold text-stone-100 mb-2">Add Image Resource</p>
-                    <button type="button" id="image-form-close" class="mb-2 bg-red-500 text-white px-1 rounded">close</button>
+                    <p class="font-bold mb-2">Add Image Resource</p>
+                    <button type="button" id="image-form-close" class="mb-2 bg-red-500 text-white px-2 py-1 rounded">close</button>
                 </div>
-                <label class="text-sm font-medium text-stone-100 mb-2">Title</label>
+                <label class="text-sm font-medium mb-2">Title</label>
                 {{ image_resource_form.title }}
-                <label class="text-sm font-medium text-stone-100 mb-2">Notes</label>
+                <label class="text-sm font-medium mb-2">Notes</label>
                 {{ image_resource_form.notes }}
-                <label class="text-sm font-medium text-stone-100 mb-2">Image</label>
+                <label class="text-sm font-medium mb-2">Image</label>
                 {{ image_resource_form.image }}
-                <button type="submit" name="image_resource" class="bg-lighter-brownish hover:bg-card mt-4 px-2 py-1 rounded">Add Image Resource</button>
+                <button type="submit" name="image_resource" class="bg-blue-500 hover:bg-blue-600 mt-4 px-2 py-1 text-white rounded">Add Image Resource</button>
             </div>
         </form>
     </div>
@@ -70,18 +70,18 @@
     <div class="mb-4" id="file-form" hidden>
         <form method="post" enctype="multipart/form-data" action="{% url 'file_resource' pathway_id=pathway.id %}">
             {% csrf_token %}
-            <div class="p-4 bg-emerald-800 rounded">
+            <div class="p-4 bg-slate-300 text-black rounded">
                 <div class="flex justify-between">
-                    <p class="font-bold text-stone-100 mb-2">Add File Resource</p>
-                    <button type="button" id="file-form-close" class="mb-2 bg-red-500 text-white px-1 rounded">close</button>
+                    <p class="font-bold mb-2">Add File Resource</p>
+                    <button type="button" id="file-form-close" class="mb-2 bg-red-500 text-white px-2 py-1 rounded">close</button>
                 </div>
-                <label class="text-sm font-medium text-stone-100 mb-2">Title</label>
+                <label class="text-sm font-medium mb-2">Title</label>
                 {{ file_resource_form.title }}
-                <label class="text-sm font-medium text-stone-100 mb-2">Notes</label>
+                <label class="text-sm font-medium mb-2">Notes</label>
                 {{ file_resource_form.notes }}
-                <label class="text-sm font-medium text-stone-100 mb-2">File</label>
+                <label class="text-sm font-medium mb-2">File</label>
                 {{ file_resource_form.attachment }}
-                <button type="submit" name="file_resource" class="bg-lighter-brownish hover:bg-card mt-4 px-2 py-1 rounded">Add File Resource</button>
+                <button type="submit" name="file_resource" class="bg-blue-500 hover:bg-blue-600 text-white mt-4 px-2 py-1 rounded">Add File Resource</button>
             </div>
         </form>
     </div>
@@ -91,18 +91,18 @@
     <div id="link-form" hidden>
         <form method="post" action="{% url 'link_resource' pathway_id=pathway.id %}">
             {% csrf_token %}
-            <div class="p-4 bg-indigo-800 rounded">
+            <div class="p-4 bg-slate-300 text-black rounded">
                 <div class="flex justify-between">
-                    <p class="font-bold text-stone-100 mb-2">Add Link Resource</p>
-                    <button type="button" id="link-form-close" class="mb-2 bg-red-500 text-white px-1 rounded">close</button>
+                    <p class="font-bold mb-2 text-black">Add Link Resource</p>
+                    <button type="button" id="link-form-close" class="mb-2 bg-red-500 text-white px-2 py-1 rounded">close</button>
                 </div>
-                <label class="text-sm font-medium text-stone-100 mb-2">Title</label>
+                <label class="text-sm font-medium mb-2">Title</label>
                 {{ link_resource_form.title }}
-                <label class="text-sm font-medium text-stone-100 mb-2">Notes</label>
+                <label class="text-sm font-medium mb-2">Notes</label>
                 {{ link_resource_form.notes }}
-                <label class="text-sm font-medium text-stone-100 mb-2">URL</label>
+                <label class="text-sm font-medium mb-2">URL</label>
                 {{ link_resource_form.url }}
-                <button type="submit" name="link_resource" class="bg-lighter-brownish hover:bg-card mt-4 px-2 py-1 rounded">Add Link Resource</button>
+                <button type="submit" name="link_resource" class="bg-blue-500 hover:bg-blue-600 text-white mt-4 px-2 py-1 rounded">Add Link Resource</button>
             </div>
         </form>
     </div>
@@ -110,8 +110,8 @@
     <div class="pt-4 font-bold">View Resources</div>
 
     <div>
-        <div class="p-4 bg-sky-800 rounded mt-4 text-stone-100">
-            <button type="button" class="font-bold flex justify-between items-center w-full" id="text-resource-button">
+        <div class="p-4 bg-slate-200 rounded mt-4 text-black">
+            <button type="button" class="font-bold flex justify-between w-full" id="text-resource-button">
                 Text Resources ✍🏼
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 font-bold transform rotate-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -120,18 +120,20 @@
         
             <div id="text-resource-content" class="mt-4"> 
                 {% for text_resource in pathway.text_resources.all %}
-                    <div class="divide-y divide-stone-400 mb-4">
-                        <div class="pseudo-element"></div>
-                        <div>
-                            <div class="fs-6 fw-medium pb-3 pt-3">{{ text_resource.title }}</div>
-                            <div>{{ text_resource.content|safe }}</div>
-                        </div>
+                    <div class="mb-4 p-4 bg-slate-300 rounded">
+                        <button type="button" class="font-medium toggle-text-resource flex justify-between w-full">
+                            {{ text_resource.title }}
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 font-bold transform rotate-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+                        <div class="hidden mt-4">{{ text_resource.content|safe }}</div>
                     </div>
                 {% endfor %}
             </div>
         </div>                
         
-        <div class="p-4 bg-amber-800 rounded mt-4 text-stone-100">
+        <div class="p-4 bg-slate-200 rounded mt-4 text-black">
             <button type="button" class="font-bold flex justify-between items-center w-full" id="image-resource-button">
                 Image Resources 🏞️
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 font-bold transform rotate-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -141,16 +143,20 @@
 
             <div id="image-resource-content" class="mt-4">
                 {% for image_resource in pathway.image_resources.all %}
-                    <div class="mb-4 border rounded p-4">
-                        <div>{{ image_resource.title }}</div>
-                        
-                        <img class="rounded mt-2" src="{{ image_resource.image.url }}" alt="{{ image_resource.title }}">
+                    <div class="mb-4 bg-slate-300 rounded p-4">
+                        <button type="button" class="font-medium toggle-image-resource flex justify-between w-full">
+                            {{ image_resource.title }}
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 font-bold transform rotate-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+                        <img class="rounded mt-4 hidden" src="{{ image_resource.image.url }}" alt="{{ image_resource.title }}">
                     </div>
                 {% endfor %}
             </div>
         </div>
 
-        <div class="p-4 bg-emerald-800 rounded mt-4 text-stone-100">
+        <div class="p-4 bg-slate-200 rounded mt-4 text-black">
             <button type="button" class="font-bold flex justify-between items-center w-full" id="file-resource-button">
                 File Resources 📑
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 font-bold transform rotate-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -160,16 +166,21 @@
 
             <div id="file-resource-content" class="mt-4">
                 {% for file_resource in pathway.file_resources.all %}
-                    <div class="mb-4 border rounded p-4">
-                        <div>{{ file_resource.title }}</div>
+                    <div class="mb-4 rounded p-4 bg-slate-300">
+                        <button type="button" class="font-medium toggle-file-resource flex justify-between w-full">
+                            {{ file_resource.title }}
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 font-bold transform rotate-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
                         
-                        <div><a href="{{ file_resource.attachment.url }}" target="_blank">{{ file_resource.attachment.url }}</a></div>
+                        <div class="hidden mt-4"><a href="{{ file_resource.attachment.url }}" target="_blank">{{ file_resource.attachment.url }}</a></div>
                     </div>
                 {% endfor %}
             </div>
         </div>
 
-        <div class="p-4 bg-indigo-800 rounded mt-4 text-stone-100">
+        <div class="p-4 bg-slate-200 rounded mt-4 text-black">
             <button type="button" class="font-bold flex justify-between items-center w-full" id="link-resource-button">
                 Link Resources 🔗
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 font-bold transform rotate-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -179,10 +190,15 @@
 
             <div id="link-resource-content" class="mt-4">
                 {% for link_resource in pathway.link_resources.all %}
-                    <div class="mb-4 border rounded p-4">
-                        <div>{{ link_resource.title }}</div>
+                    <div class="mb-4 rounded p-4 bg-slate-300">
+                        <button type="button" class="font-medium toggle-link-resource flex justify-between w-full">
+                            {{ link_resource.title }}
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 font-bold transform rotate-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
                         
-                        <div class="truncate"><a href="{{ link_resource.url }}" target="_blank">{{ link_resource.url }}</a></div>
+                        <div class="truncate hidden mt-4"><a href="{{ link_resource.url }}" target="_blank">{{ link_resource.url }}</a></div>
                     </div>
                 {% endfor %}
             </div>
@@ -232,21 +248,64 @@
         linkForm.setAttribute('hidden', true);
         });
 
-        document.getElementById('text-resource-button').addEventListener('click', function() {
+        document.addEventListener('DOMContentLoaded', () => {
             const textContent = document.getElementById('text-resource-content');
-            textContent.classList.toggle('hidden');
+            
+            document.getElementById('text-resource-button').addEventListener('click', function() {
+                textContent.classList.toggle('hidden');
+            });
+            
+            document.querySelectorAll('.toggle-text-resource').forEach(button => {
+                button.addEventListener('click', () => {
+                    const resourceContent = button.nextElementSibling;
+                    resourceContent.classList.toggle('hidden');
+                });
+            });
         });
-        document.getElementById('image-resource-button').addEventListener('click', function() {
+
+        document.addEventListener('DOMContentLoaded', () => {
             const imageContent = document.getElementById('image-resource-content');
-            imageContent.classList.toggle('hidden');
+            
+            document.getElementById('image-resource-button').addEventListener('click', function() {
+                imageContent.classList.toggle('hidden');
+            });
+            
+            document.querySelectorAll('.toggle-image-resource').forEach(button => {
+                button.addEventListener('click', () => {
+                    const resourceContent = button.nextElementSibling;
+                    resourceContent.classList.toggle('hidden');
+                });
+            });
         });
-        document.getElementById('file-resource-button').addEventListener('click', function() {
+
+        document.addEventListener('DOMContentLoaded', () => {
             const fileContent = document.getElementById('file-resource-content');
-            fileContent.classList.toggle('hidden');
+            
+            document.getElementById('file-resource-button').addEventListener('click', function() {
+                fileContent.classList.toggle('hidden');
+            });
+            
+            document.querySelectorAll('.toggle-file-resource').forEach(button => {
+                button.addEventListener('click', () => {
+                    const resourceContent = button.nextElementSibling;
+                    resourceContent.classList.toggle('hidden');
+                });
+            });
         });
-        document.getElementById('link-resource-button').addEventListener('click', function() {
+
+        document.addEventListener('DOMContentLoaded', () => {
             const linkContent = document.getElementById('link-resource-content');
-            linkContent.classList.toggle('hidden');
+            
+            document.getElementById('link-resource-button').addEventListener('click', function() {
+                linkContent.classList.toggle('hidden');
+            });
+            
+            document.querySelectorAll('.toggle-link-resource').forEach(button => {
+                button.addEventListener('click', () => {
+                    const resourceContent = button.nextElementSibling;
+                    resourceContent.classList.toggle('hidden');
+                });
+            });
         });
 
     </script>

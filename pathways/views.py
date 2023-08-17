@@ -1,7 +1,9 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
 from django.db.models import Q
-from .forms import PathwayForm, LinkResourceForm, FileResourceForm, TextResourceForm, ImageResourceForm, PathwaySettingsForm
-from .models import Pathway
+from .forms import PathwayForm, LinkResourceForm, FileResourceForm, TextResourceForm, ImageResourceForm, PathwaySettingsForm, PathwayCommentsForm, PathwayRepliesForm
+from .models import Pathway, Comment, Reply
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
@@ -74,6 +76,58 @@ def downvote_pathway_view(request, pathway_id):
     pathway.downvotes += 1
     pathway.save()
     return redirect('resource_archive', pathway_id=pathway_id)
+
+@login_required
+def pathway_comments_view(request, pathway_id):
+    pathway = get_object_or_404(Pathway, id=pathway_id)
+    
+    if request.method == "POST":
+        parent_comment_id = request.POST.get('parent_comment_id')
+        parent_comment = None
+        if parent_comment_id:
+            parent_comment = get_object_or_404(Comment, id=parent_comment_id)
+        text = request.POST.get('text')
+        Comment.objects.create(
+            pathway=pathway, 
+            user=request.user, 
+            text=text, 
+            parent_comment=parent_comment
+        )
+        return redirect('pathway_comments', pathway_id=pathway_id)
+
+    comments = Comment.objects.filter(pathway=pathway, parent_comment=None)
+    form = PathwayCommentsForm()
+    return render(request, 'pathways/pathway_comments_template.html', {
+        'pathway': pathway,
+        'form': form,
+        'comments': comments,
+    })
+
+@login_required
+def pathway_reply_view(request, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
+    pathway = comment.pathway
+
+    if request.method == "POST":
+        parent_reply_id = request.POST.get('parent_reply_id')
+        parent_reply = None
+        if parent_reply_id:
+            parent_reply = get_object_or_404(Reply, id=parent_reply_id)
+        
+        text = request.POST.get('text')
+        Reply.objects.create(
+            comment=comment, 
+            user=request.user, 
+            text=text,
+            parent_reply=parent_reply
+        )
+        return redirect('pathway_comments', pathway_id=pathway.id)
+
+    form = PathwayRepliesForm()
+    return render(request, 'pathways/pathway_reply_template.html', {
+        'comment': comment,
+        'form': form,
+    })
 
 
 def text_resource_view(request, pathway_id):
