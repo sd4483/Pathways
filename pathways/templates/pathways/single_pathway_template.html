@@ -21,11 +21,11 @@
                         <div class="grid grid-cols-2 gap-4 col-span-6 text-white">
                             <form method="post" action="{% url 'upvote_pathway' pathway.id %}">
                                 {% csrf_token %}
-                                <button type="submit" class="bg-blue-500 p-2 rounded w-full">Upvote</button>
+                                <button type="submit" class="bg-blue-500 p-2 rounded w-full">⬆ Upvote</button>
                             </form>
                             <form method="post" action="{% url 'downvote_pathway' pathway.id %}">
                                 {% csrf_token %}
-                                <button type="submit" class="bg-red-500 p-2 rounded w-full">Downvote</button>
+                                <button type="submit" class="bg-red-500 p-2 rounded w-full">⬇ Downvote</button>
                             </form>
                         </div>   
                     </div>

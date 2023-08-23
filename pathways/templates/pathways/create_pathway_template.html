@@ -1,26 +1,26 @@
 {% extends 'shared/header.html' %}
 
 {% block content %}
-<div class="flex justify-center py-6">
-    <div class="w-full max-w-2xl mx-auto bg-[#E3CCAE] p-4 rounded">
-        <h2 class="text-xl font-bold mb-6 text-gray-700 text-center">Create a new pathway</h2>
+<div class="flex justify-center">
+    <div class="w-full max-w-xl mx-auto bg-slate-200 p-8 rounded">
+        <h2 class="text-xl font-bold mb-6 text-black text-center">Create a new pathway</h2>
         {% if user.is_authenticated %}
         <form method="post" class="space-y-6">
             {% csrf_token %}
             <div>
                 <label for="{{ form.title.id_for_label }}" class="block text-base font-medium text-gray-900">Title</label>
-                <input type="text" class="mt-1 py-2 px-3 block w-full border border-gray-500 bg-[#E3CCAE]
-                focus:outline-none focus:border-gray-500 focus:ring-1 focus:ring-gray-500
+                <input type="text" class="mt-1 py-2 px-3 block w-full border border-slate-700 bg-transparent
+                focus:outline-none focus:border-slate-800 focus:ring-1 focus:ring-gray-500
                 focus:invalid:border-red-500 focus:invalid:ring-red-500
                 rounded text-base" id="{{ form.title.id_for_label }}" name="{{ form.title.html_name }}" value="{{ form.title.value|default_if_none:'' }}">
                 {{ form.title.errors }}
             </div>
             <div class="mb-3">
                 <label for="{{ form.description.id_for_label }}" class="block text-base font-medium text-gray-900">Description</label>
-                <textarea class="mt-1 block px-3 py-2 w-full border border-gray-500 
-                focus:outline-none focus:border-gray-500 focus:ring-1 focus:ring-gray-500
+                <textarea class="mt-1 block px-3 py-2 w-full border border-slate-700 bg-transparent 
+                focus:outline-none focus:border-slate-800 focus:ring-1 focus:ring-gray-500
                 focus:invalid:border-red-500 focus:invalid:ring-red-500 
-                bg-[#E3CCAE] rounded text-base" id="{{ form.description.id_for_label }}" name="{{ form.description.html_name }}">{{ form.description.value|default_if_none:'' }}</textarea>
+                rounded text-base" id="{{ form.description.id_for_label }}" name="{{ form.description.html_name }}">{{ form.description.value|default_if_none:'' }}</textarea>
                 {{ form.description.errors }}
             </div>
             <button type="submit" class="py-2 px-4 rounded-md shadow-sm text-base font-medium text-white bg-blue-800 hover:bg-blue-900">Submit</button>
