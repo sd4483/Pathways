@@ -82,3 +82,7 @@ class StudyTaskForm(forms.ModelForm):
     class Meta:
         model = StudyTask
         fields = ['title']
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['title'].widget.attrs.update({'class': 'w-full py-2 px-4 border border-slate-500 focus:outline-none focus:border-slate-700 text-black block bg-transparent rounded'})

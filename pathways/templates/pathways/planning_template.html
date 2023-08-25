@@ -4,39 +4,45 @@
 <div class="text-xl pb-2 font-bold">Planning for {{ pathway.title }}</div>
 
 {% if user.is_authenticated %}
+  
     <!-- Task Addition Form -->
-    <div class="my-4 p-4 bg-gray-100 border rounded">
+    <div class="my-4">
+        <div class="font-bold pb-2">Add a task to study</div>
         <form method="post" class="flex flex-col">
             {% csrf_token %}
-            <label class="font-bold mb-2" for="{{ form.title.id_for_label }}">Task:</label>
-            {{ form.title }}
-            <button type="submit" class="mt-2 bg-blue-600 text-white px-4 py-2 rounded">Add Task</button>
+            <div class="grid grid-cols-5 gap-4 mt-2">
+                <div class="col-span-4">{{ form.title }}</div>
+                <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Add Task</button>
+            </div>
         </form>
     </div>
 
-    <!-- Displaying the To Study tasks -->
-    <div class="my-4">
-        <h2 class="text-lg font-bold pb-2">To Study:</h2>
-        {% for task in to_study_tasks %}
-        <div class="flex justify-between items-center border rounded p-2 my-2">
-            <span>{{ task.title }}</span>
-            <form method="post" action="{% url 'complete_task' pathway.id task.id %}">
-                {% csrf_token %}
-                <button type="submit" class="text-white bg-green-500 hover:bg-green-600 rounded p-2">✓</button>
-            </form>
+    <div class="grid grid-cols-2 gap-4">
+        <!-- Displaying the To Study tasks -->
+        <div class="my-4 bg-slate-200 rounded p-4">
+            <div class="font-bold pb-2">To Study</div>
+            {% for task in to_study_tasks %}
+            <div class="flex justify-between items-center bg-slate-300 rounded p-2 my-2">
+                <span>{{ task.title }}</span>
+                <form method="post" action="{% url 'complete_task' pathway.id task.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="text-white bg-green-600 hover:bg-green-700 rounded px-4 py-1">✓</button>
+                </form>
+            </div>
+            {% endfor %}
         </div>
-        {% endfor %}
-    </div>
 
-    <!-- Displaying the Completed tasks -->
-    <div class="my-4">
-        <h2 class="text-lg font-bold pb-2">Completed:</h2>
-        {% for task in completed_tasks %}
-        <div class="flex justify-between items-center border rounded p-2 my-2 bg-gray-200">
-            <span>{{ task.title }}</span>
+        <!-- Displaying the Completed tasks -->
+        <div class="my-4 bg-slate-200 rounded p-4">
+            <div class="font-bold pb-2">Completed</div>
+            {% for task in completed_tasks %}
+            <div class="flex justify-between items-center rounded line-through text-gray-600 py-3 px-2 my-2 bg-slate-300">
+                <span>{{ task.title }}</span>
+            </div>
+            {% endfor %}
         </div>
-        {% endfor %}
     </div>
+    
 {% endif %}
 
 {% if not user.is_authenticated %}

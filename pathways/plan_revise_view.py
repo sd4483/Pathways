@@ -12,6 +12,7 @@ def planning_view(request, pathway_id):
             task.user = request.user
             task.pathway = pathway
             task.save()
+            return redirect('planning', pathway_id=pathway_id)
     else:
         form = StudyTaskForm()
 
