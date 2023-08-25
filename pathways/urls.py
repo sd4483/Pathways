@@ -1,5 +1,6 @@
 from django.urls import path, include
 from . import views
+from .plan_revise_view import planning_view, complete_task_view
 
 urlpatterns = [
     path('view/', views.view_pathway_view, name='view_pathway'),
@@ -17,4 +18,6 @@ urlpatterns = [
     path('pathway/<int:pathway_id>/add-image', views.image_resource_view, name='image_resource'),
     path('pathway/<int:pathway_id>/add-file', views.file_resource_view, name='file_resource'),
     path('delete_pathway/<int:pathway_id>/', views.delete_pathway_view, name='delete_pathway'),
+    path('pathway/<int:pathway_id>/planning/', planning_view, name='planning'),
+    path('pathway/<int:pathway_id>/complete-task/<int:task_id>/', complete_task_view, name='complete_task'),
 ]

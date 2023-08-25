@@ -1,5 +1,5 @@
 from django import forms
-from .models import Pathway, LinkResource, FileResource, TextResource, ImageResource, Comment, Reply
+from .models import Pathway, LinkResource, FileResource, TextResource, ImageResource, Comment, Reply, StudyTask
 
 class PathwayForm(forms.ModelForm):
     class Meta:
@@ -76,3 +76,9 @@ class TextResourceForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['title'].widget.attrs.update({'class': 'w-full mb-2 mt-1 py-2 px-3 border border-slate-500 focus:outline-none focus:border-slate-700 text-black block bg-transparent rounded'})
         self.fields['content'].widget.attrs.update({'class': 'w-full mt-1 py-2 px-3 border border-slate-500 focus:outline-none focus:border-slate-700 text-black block bg-transparent rounded'})
+
+
+class StudyTaskForm(forms.ModelForm):
+    class Meta:
+        model = StudyTask
+        fields = ['title']

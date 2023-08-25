@@ -64,3 +64,11 @@ class FileResource(models.Model):
     notes = models.TextField()
     attachment = models.FileField(upload_to='files/')
     created_at = models.DateTimeField(auto_now_add=True)
+
+class StudyTask(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    pathway = models.ForeignKey(Pathway, on_delete=models.CASCADE, related_name="tasks")
+    title = models.CharField(max_length=200)
+    is_completed = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
