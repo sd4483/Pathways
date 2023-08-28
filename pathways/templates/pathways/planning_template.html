@@ -6,12 +6,14 @@
 {% if user.is_authenticated %}
   
     <!-- Task Addition Form -->
-    <div class="my-4">
+    <div class="my-4 bg-slate-200 rounded p-4">
         <div class="font-bold pb-2">Add a task to study</div>
         <form method="post" class="flex flex-col">
             {% csrf_token %}
-            <div class="grid grid-cols-5 gap-4 mt-2">
-                <div class="col-span-4">{{ form.title }}</div>
+            <div class="mt-2">{{ form.title }}</div>
+            
+            <div class="flex justify-between mt-4">
+                <div class="bg-yellow-500 px-4 py-2 text-black rounded">Due Date : {{ form.due_date }}</div>
                 <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Add Task</button>
             </div>
         </form>
@@ -22,11 +24,14 @@
         <div class="my-4 bg-slate-200 rounded p-4">
             <div class="font-bold pb-2">To Study</div>
             {% for task in to_study_tasks %}
-            <div class="flex justify-between items-center bg-slate-300 rounded p-2 my-2">
-                <span>{{ task.title }}</span>
+            <div class="flex justify-between gap-4 items-center my-2">
+                <div class="flex justify-between items-center bg-slate-300 rounded p-2 w-full">
+                    <span>{{ task.title }}</span>
+                    <span class="text-gray-700 text-sm">Due by {{ task.due_date }}</span>
+                </div>
                 <form method="post" action="{% url 'complete_task' pathway.id task.id %}">
                     {% csrf_token %}
-                    <button type="submit" class="text-white bg-green-600 hover:bg-green-700 rounded px-4 py-1">✓</button>
+                    <button type="submit" class="text-white bg-green-600 hover:bg-green-700 rounded px-4 py-2">✓</button>
                 </form>
             </div>
             {% endfor %}
@@ -36,7 +41,7 @@
         <div class="my-4 bg-slate-200 rounded p-4">
             <div class="font-bold pb-2">Completed</div>
             {% for task in completed_tasks %}
-            <div class="flex justify-between items-center rounded line-through text-gray-600 py-3 px-2 my-2 bg-slate-300">
+            <div class="flex justify-between items-center rounded line-through text-gray-600 py-2 px-2 my-2 bg-slate-300">
                 <span>{{ task.title }}</span>
             </div>
             {% endfor %}
@@ -51,5 +56,11 @@
         If you are a registered user, login by clicking the button above.
     </div>
 {% endif %}
+
+<script>
+    document.querySelector('#{{ form.due_date.id_for_label }}').addEventListener('change', function(e) {
+        document.querySelector('#selectedDate').textContent = e.target.value;
+    });
+</script>
 
 {% endblock %}

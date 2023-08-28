@@ -79,10 +79,13 @@ class TextResourceForm(forms.ModelForm):
 
 
 class StudyTaskForm(forms.ModelForm):
+    due_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
     class Meta:
         model = StudyTask
-        fields = ['title']
+        fields = ['title', 'due_date']
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['title'].widget.attrs.update({'class': 'w-full py-2 px-4 border border-slate-500 focus:outline-none focus:border-slate-700 text-black block bg-transparent rounded'})
+        self.fields['due_date'].widget.attrs.update({'class': 'bg-transparent focus:outline-none'})
+        self.fields['due_date'].required = False

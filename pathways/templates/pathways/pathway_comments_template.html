@@ -4,7 +4,7 @@
 <div class="text-xl pb-2 font-bold">Discussion for {{ pathway.title }}</div>
 
 {% if user.is_authenticated %}
-    <!-- Comment form to post a new comment (not a reply) -->
+    <!-- Comment form to post a new comment -->
     <form method="post" action="{% url 'pathway_comments' pathway.id %}">
         {% csrf_token %}
         {{ form.text }}
