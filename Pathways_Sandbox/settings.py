@@ -82,22 +82,20 @@ WSGI_APPLICATION = "Pathways_Sandbox.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))
-}
-
 # DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': 'Pathways_Sandbox',
-#         'USER': 'postgres',
-#         'PASSWORD': 'symbian',
-#         'HOST': 'localhost',
-#         'PORT': '5433',
-#     }
+#     'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))
 # }
 
-#pathways-sd-59d7bb1ee03d.herokuapp.com
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'Pathways_Sandbox',
+        'USER': 'postgres',
+        'PASSWORD': 'symbian',
+        'HOST': 'localhost',
+        'PORT': '5433',
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
