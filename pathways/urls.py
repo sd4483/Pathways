@@ -3,7 +3,7 @@ from . import views
 from .plan_revise_view import planning_view, complete_task_view
 
 urlpatterns = [
-    path('view/', views.view_pathway_view, name='view_pathway'),
+    path('', views.view_pathway_view, name='view_pathway'),
     path('create/', views.create_pathway_view, name='create_pathway'),
     path('tinymce/', include('tinymce.urls')),
     path('pathway/<int:pathway_id>/', views.single_pathway_view, name='single_pathway'),
