@@ -1,0 +1,9 @@
+{% for revision in revisions %}
+    <div class="revision-box">
+        Task: {{ revision.study_task.title }} <br>
+        Revision: {{ revision.revision_type }} <br>
+        Due Date: {{ revision.due_date }} <br>
+        Progress: {{ revision.progress_percentage }}%
+        <button>Mark as Completed</button>
+    </div>
+{% endfor %}

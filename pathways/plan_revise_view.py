@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import StudyTask, Pathway
+from .models import StudyTask, Pathway, Revision
 from .forms import StudyTaskForm
 
 def planning_view(request, pathway_id):
@@ -33,3 +33,9 @@ def complete_task_view(request, pathway_id, task_id):
     task.is_completed = True
     task.save()
     return redirect('planning', pathway_id=pathway.id)
+
+
+def revision_view(request, pathway_id):
+    user_revisions = Revision.objects.filter(study_task__user=request.user, study_task__pathway=pathway_id, status=Revision.PENDING).order_by('due_date')
+    return render(request, 'pathways/revision_template.html', {'revisions': user_revisions})
+

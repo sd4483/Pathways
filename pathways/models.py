@@ -1,6 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
 from tinymce.models import HTMLField
+from datetime import date, timedelta
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 # Create your models here.
 
@@ -72,4 +75,67 @@ class StudyTask(models.Model):
     is_completed = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     due_date = models.DateField(blank=True, null=True)
+
+@receiver(post_save, sender=StudyTask)
+def create_revisions(sender, instance, **kwargs):
+    if instance.is_completed:
+        Revision.objects.create(
+            study_task=instance,
+            pathway=instance.pathway,
+            revision_type=Revision.FIRST,
+            due_date=date.today() + timedelta(days=1)
+        )
+        Revision.objects.create(
+            study_task=instance,
+            pathway=instance.pathway,
+            revision_type=Revision.SECOND,
+            due_date=date.today() + timedelta(days=3)
+        )
+        Revision.objects.create(
+            study_task=instance,
+            pathway=instance.pathway,
+            revision_type=Revision.THIRD,
+            due_date=date.today() + timedelta(days=7)
+        )
+        Revision.objects.create(
+            study_task=instance,
+            pathway=instance.pathway,
+            revision_type=Revision.FOURTH,
+            due_date=date.today() + timedelta(days=30)
+        )
+
+class Revision(models.Model):
+    PENDING = 'pending'
+    COMPLETED = 'completed'
+    REVISION_STATUS = [
+        (PENDING, 'Pending'),
+        (COMPLETED, 'Completed'),
+    ]
+
+    FIRST = 'first'
+    SECOND = 'second'
+    THIRD = 'third'
+    FOURTH = 'fourth'
+    REVISION_TYPE = [
+        (FIRST, 'First Revision'),
+        (SECOND, 'Second Revision'),
+        (THIRD, 'Third Revision'),
+        (FOURTH, 'Fourth Revision'),
+    ]
+
+    study_task = models.ForeignKey(StudyTask, on_delete=models.CASCADE, related_name='revisions')
+    pathway = models.ForeignKey(Pathway, on_delete=models.CASCADE, related_name="revisions")
+    revision_type = models.CharField(max_length=10, choices=REVISION_TYPE)
+    status = models.CharField(max_length=10, choices=REVISION_STATUS, default=PENDING)
+    due_date = models.DateField()
+
+    @property
+    def progress_percentage(self):
+        # Here, map the revision type to a specific percentage.
+        return {
+            self.FIRST: 25,
+            self.SECOND: 50,
+            self.THIRD: 75,
+            self.FOURTH: 100
+        }.get(self.revision_type, 0)
 
