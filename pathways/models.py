@@ -78,30 +78,12 @@ class StudyTask(models.Model):
 
 @receiver(post_save, sender=StudyTask)
 def create_revisions(sender, instance, **kwargs):
-    if instance.is_completed:
+    if instance.is_completed and not Revision.objects.filter(study_task=instance).exists():
         Revision.objects.create(
             study_task=instance,
             pathway=instance.pathway,
             revision_type=Revision.FIRST,
             due_date=date.today() + timedelta(days=1)
-        )
-        Revision.objects.create(
-            study_task=instance,
-            pathway=instance.pathway,
-            revision_type=Revision.SECOND,
-            due_date=date.today() + timedelta(days=3)
-        )
-        Revision.objects.create(
-            study_task=instance,
-            pathway=instance.pathway,
-            revision_type=Revision.THIRD,
-            due_date=date.today() + timedelta(days=7)
-        )
-        Revision.objects.create(
-            study_task=instance,
-            pathway=instance.pathway,
-            revision_type=Revision.FOURTH,
-            due_date=date.today() + timedelta(days=30)
         )
 
 class Revision(models.Model):

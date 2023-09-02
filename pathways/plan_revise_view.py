@@ -1,3 +1,4 @@
+from datetime import timedelta
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import StudyTask, Pathway, Revision
 from .forms import StudyTaskForm
@@ -36,6 +37,41 @@ def complete_task_view(request, pathway_id, task_id):
 
 
 def revision_view(request, pathway_id):
+    pathway = get_object_or_404(Pathway, id=pathway_id)
     user_revisions = Revision.objects.filter(study_task__user=request.user, study_task__pathway=pathway_id, status=Revision.PENDING).order_by('due_date')
-    return render(request, 'pathways/revision_template.html', {'revisions': user_revisions})
+    completed_revisions = Revision.objects.filter(study_task__user=request.user, study_task__pathway=pathway_id, status=Revision.COMPLETED).order_by('due_date')
+    return render(request, 'pathways/revision_template.html', {'revisions': user_revisions, 'completed_revisions': completed_revisions, 'pathway':pathway})
+
+def mark_revision_completed(request, revision_id):
+    revision = get_object_or_404(Revision, id=revision_id)
+    
+    REVISION_TYPE_MAP = {
+        Revision.FIRST: Revision.SECOND,
+        Revision.SECOND: Revision.THIRD,
+        Revision.THIRD: Revision.FOURTH,
+        Revision.FOURTH: "completed"
+    }
+
+    next_due_dates = {
+        Revision.FIRST:  timedelta(days=1),
+        Revision.SECOND: timedelta(days=6),
+        Revision.THIRD:  timedelta(days=9),
+        Revision.FOURTH: timedelta(days=14),
+    }
+
+    next_revision_type = REVISION_TYPE_MAP[revision.revision_type]
+
+    if next_revision_type == "completed":
+        revision.status = Revision.COMPLETED
+        revision.save()
+    elif next_revision_type:
+        revision.revision_type = next_revision_type
+        revision.due_date += next_due_dates.get(next_revision_type, timedelta(days=0))
+        revision.save()
+    else:
+        revision.status = Revision.COMPLETED
+        revision.save()  
+
+    return redirect('revision', pathway_id=revision.pathway.id)
+
 

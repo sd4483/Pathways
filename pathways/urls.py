@@ -1,6 +1,6 @@
 from django.urls import path, include
 from . import views
-from .plan_revise_view import planning_view, complete_task_view, revision_view
+from .plan_revise_view import planning_view, complete_task_view, revision_view, mark_revision_completed
 
 urlpatterns = [
     path('', views.view_pathway_view, name='view_pathway'),
@@ -21,4 +21,5 @@ urlpatterns = [
     path('pathway/<int:pathway_id>/planning/', planning_view, name='planning'),
     path('pathway/<int:pathway_id>/revision/', revision_view, name='revision'),
     path('pathway/<int:pathway_id>/complete-task/<int:task_id>/', complete_task_view, name='complete_task'),
+    path('mark_revision_completed/<int:revision_id>/', mark_revision_completed, name='mark_revision_completed'),
 ]
