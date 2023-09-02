@@ -85,6 +85,7 @@ def create_revisions(sender, instance, **kwargs):
             revision_type=Revision.FIRST,
             due_date=date.today() + timedelta(days=1)
         )
+        
 
 class Revision(models.Model):
     PENDING = 'pending'
@@ -113,7 +114,6 @@ class Revision(models.Model):
 
     @property
     def progress_percentage(self):
-        # Here, map the revision type to a specific percentage.
         return {
             self.FIRST: 25,
             self.SECOND: 50,
