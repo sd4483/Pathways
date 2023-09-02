@@ -1,8 +1,7 @@
-from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
+from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Q
 from .forms import PathwayForm, LinkResourceForm, FileResourceForm, TextResourceForm, ImageResourceForm, PathwaySettingsForm, PathwayCommentsForm, PathwayRepliesForm
 from .models import Pathway, Comment, Reply
-from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
 # Create your views here.
@@ -12,7 +11,13 @@ def view_pathway_view(request):
         pathways = Pathway.objects.filter(Q(visibility='public') | Q(user=request.user))
     else:
         pathways = Pathway.objects.filter(visibility='public')
-    return render(request, 'pathways/view_pathway_template.html', {'pathways': pathways})
+
+    if 'users/home' in request.path:
+        template_name = 'users/home_template.html'
+    else:
+        template_name = 'pathways/view_pathway_template.html'
+
+    return render(request, template_name, {'pathways': pathways})
 
 def delete_pathway_view(request, pathway_id):
     pathway = get_object_or_404(Pathway, pk=pathway_id)

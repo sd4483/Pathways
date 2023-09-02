@@ -9,32 +9,23 @@
 <!-- templates/shared/header.html -->
 <header class="text-black bg-slate-200 rounded m-4 font-mono">
     <div class="flex justify-between content-center py-2 mx-4">
-        <div class="text-lg uppercase font-bold">Pathways</div>
-        <div class="absolute inset-x-0 top-y-0 flex items-center justify-center z-10">
+        <div class="text-lg uppercase font-bold pt-1">Pathways🚦</div>
+        <div class="absolute inset-x-0 top-y-0 flex items-center justify-center pt-1 z-10">
             <div>{{ user.username }}</div>
         </div>
         {% if not user.is_authenticated %}
-        <div class="grid grid-cols-4 gap-6 justify-items-center text-base font-medium z-20">
-            <div>
-                <a href="{% url 'view_pathway'%}">View</a>
-            </div>
-            <div>
-                <a href="{% url 'create_pathway' %}">Create</a>
-            </div>
-            <div>
-                <a href="{% url 'login' %}">Login</a>
-            </div>
+        <div class="flex gap-4 justify-between text-base font-medium z-20 my-1">
             <div>
                 <a href="{% url 'register' %}">Register</a>
             </div>
+            <div>
+                <a href="{% url 'login' %}" class="p-2 bg-blue-600 hover:bg-blue-700 rounded text-white">Login</a>
+            </div>
         </div>
         {% else %}
-        <div class="grid grid-cols-3 gap-6 justify-items-center text-base font-medium z-20">
+        <div class="flex gap-6 justify-between text-base font-medium z-20 my-1">
             <div>
-                <a href="{% url 'view_pathway'%}">View</a>
-            </div>
-            <div>
-                <a href="{% url 'create_pathway' %}">Create</a>
+                <a href="{% url 'view_pathway'%}">View Pathways</a>
             </div>
             <div>
                 <a href="{% url 'logout' %}">Logout</a>

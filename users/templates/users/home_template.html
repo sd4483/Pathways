@@ -1,10 +1,30 @@
 {% extends 'shared/header.html' %}
 
 {% block content %}
-<div class="d-flex justify-content-center">
-    <div class="w-50 mt-4 shadow p-3 mb-5 bg-body-tertiary p-4 rounded-2">
-        <h2 class="fs-4 fw-medium pb-3 text-center">Home</h2>
-        <div>Login/Register to create pathways.</div>
+<div class="flex justify-center">
+    
+    <div class="w-full max-w-5xl mx-auto p-4 bg-slate-200 rounded">
+        <div class="flex gap-4 justify-between">
+            
+            <div>Learn anything you want to learn by gathering your resources and planning your learning.
+                Share your learning. Keep it public/private. Discuss with others and do a lot more.
+            </div>
+            {% for pathway in pathways %}
+            
+            <div class="flex items-center mb-2">            
+                <div class="flex justify-between py-2 px-4 bg-slate-300 rounded text-black items-center w-full">
+                    <div>
+                        <a class="capitalize" href="{% url 'resource_archive' pathway.id %}">{{ pathway.title }}</a>
+                    </div>
+                    <div class="text-sm text-gray-600">created by: {{ pathway.user }}</div>
+                </div>
+            
+            </div>
+
+            {% empty %}
+                No pathways yet.
+            {% endfor %}
+        </div>
     </div>
 </div>
 {% endblock %}

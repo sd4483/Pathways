@@ -6,7 +6,11 @@
             <div class="divide-y divide-slate-800 mb-4">
                 <div class="flex justify-between mb-4 items-center">
                     <div class="text-xl font-bold text-black text-center">Pathways Created</div>
-                    <button id="edit-button" class="px-4 py-1 rounded bg-slate-900 text-white text-sm hover:bg-slate-800">Edit</button>
+                    <div class="gap-4">
+                        <button id="edit-button" class="px-4 py-1 rounded bg-slate-900 text-white text-sm hover:bg-slate-800">Edit</button>
+                        <button id="create-button" class="px-4 py-1 rounded bg-blue-600 text-white text-sm hover:bg-blue-700">Create New</button>
+                    </div>
+                    
                 </div>
                 <div class="pseudo-element"></div>
             </div>
@@ -67,6 +71,11 @@
                 }
             });
         });
+
+        document.getElementById('create-button').addEventListener('click', function() {
+            window.location.href = '{% url 'create_pathway' %}';
+        });
+
 
     </script>
 {% endblock %}

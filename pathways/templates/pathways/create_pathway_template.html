@@ -2,7 +2,7 @@
 
 {% block content %}
 <div class="flex justify-center">
-    <div class="w-full max-w-xl mx-auto bg-slate-200 p-8 rounded">
+    <div class="w-full max-w-3xl mx-auto bg-slate-200 p-8 rounded">
         <h2 class="text-xl font-bold mb-6 text-black text-center">Create a new pathway</h2>
         {% if user.is_authenticated %}
         <form method="post" class="space-y-6">
@@ -23,7 +23,7 @@
                 rounded text-base" id="{{ form.description.id_for_label }}" name="{{ form.description.html_name }}">{{ form.description.value|default_if_none:'' }}</textarea>
                 {{ form.description.errors }}
             </div>
-            <button type="submit" class="py-2 px-4 rounded-md shadow-sm text-base font-medium text-white bg-blue-800 hover:bg-blue-900">Submit</button>
+            <button type="submit" class="py-2 px-4 rounded-md shadow-sm text-base font-medium text-white bg-blue-600 hover:bg-blue-700">Submit</button>
         </form>
         
         {% endif %}
