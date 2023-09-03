@@ -3,6 +3,7 @@ from django.db.models import Q
 from .forms import PathwayForm, LinkResourceForm, FileResourceForm, TextResourceForm, ImageResourceForm, PathwaySettingsForm, PathwayCommentsForm, PathwayRepliesForm
 from .models import Pathway, Comment, Reply
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 # Create your views here.
 
@@ -201,9 +202,11 @@ def pathway_settings_view(request, pathway_id):
         form = PathwaySettingsForm(request.POST, instance=pathway)
         if form.is_valid():
             form.save()
+            messages.success(request, 'Settings saved successfully!')
             return redirect('pathway_settings', pathway_id=pathway_id)
         elif form.has_changed():
             form.save()
+            messages.success(request, 'Settings saved successfully!')
             return redirect('pathway_settings', pathway_id=pathway_id)
 
     else:
