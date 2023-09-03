@@ -6,25 +6,33 @@
             
     <div class="py-4 font-bold">Add Resources</div>
 
-    <div class="grid grid-cols-4 gap-4 mb-4">
-        
-        <button type="button" class="bg-slate-300 px-2 py-1 rounded text-black" id="text-form-button">
-            Text ✍🏼
-        </button>
+    {% if user.is_authenticated and user == pathway.user %}
+        <div class="grid grid-cols-4 gap-4 mb-4">
+            
+            <button type="button" class="bg-slate-300 px-2 py-1 rounded text-black" id="text-form-button">
+                Text ✍🏼
+            </button>
 
-        <button type="button" class="bg-slate-300 px-2 py-1 rounded text-black" id="image-form-button">
-            Image 🏞️
-        </button>
+            <button type="button" class="bg-slate-300 px-2 py-1 rounded text-black" id="image-form-button">
+                Image 🏞️
+            </button>
 
-        <button type="button" class="bg-slate-300 px-2 py-1 rounded text-black" id="file-form-button">
-            File 📑
-        </button>
+            <button type="button" class="bg-slate-300 px-2 py-1 rounded text-black" id="file-form-button">
+                File 📑
+            </button>
 
-        <button type="button" class="bg-slate-300 px-2 py-1 rounded text-black" id="link-form-button">
-            Link 🔗
-        </button>
-        
+            <button type="button" class="bg-slate-300 px-2 py-1 rounded text-black" id="link-form-button">
+                Link 🔗
+            </button>
+            
+        </div>
+    {% else %}
+    <div class="mb-4">
+        Resources can only be added by creator of the pathway. 
     </div>
+    {% endif %}
+
+    
 
 
     <div class="mb-4" id="text-form" hidden>

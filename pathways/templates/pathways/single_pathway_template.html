@@ -44,6 +44,14 @@
                     <div class="bg-slate-300 p-3 rounded">
                         <a href="{% url 'pathway_settings' pathway.id %}">Settings</a>
                     </div>
+
+                    {% if user.is_authenticated and pathway.user != user and pathway.visibility == "public" %}
+                        <div class="bg-emerald-600 p-3 rounded text-white">
+                            Follow
+                        </div>
+                    {% endif %}
+
+                    
                     
                 </div>
                 <div class="col-span-3 p-4 text-black">

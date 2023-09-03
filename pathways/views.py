@@ -1,4 +1,5 @@
-from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
+from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponseForbidden
 from django.db.models import Q
 from .forms import PathwayForm, LinkResourceForm, FileResourceForm, TextResourceForm, ImageResourceForm, PathwaySettingsForm, PathwayCommentsForm, PathwayRepliesForm
 from .models import Pathway, Comment, Reply
