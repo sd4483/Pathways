@@ -1,10 +1,19 @@
 from datetime import timedelta
+from django.http import HttpResponseForbidden
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import StudyTask, Pathway, Revision
+from .models import StudyTask, Pathway, Revision, FollowedPathway
 from .forms import StudyTaskForm
 
 def planning_view(request, pathway_id):
     pathway = get_object_or_404(Pathway, id=pathway_id)
+    error_message = None
+    to_study_tasks = []
+    completed_tasks = []
+
+    if request.user.is_authenticated:
+        is_user_following = request.user.followedpathway_set.filter(pathway=pathway).exists()
+    else:
+        is_user_following = False
 
     if request.method == "POST":
         form = StudyTaskForm(request.POST)
@@ -18,8 +27,11 @@ def planning_view(request, pathway_id):
         form = StudyTaskForm()
 
     if request.user.is_authenticated:
-        to_study_tasks = StudyTask.objects.filter(user=request.user, is_completed=False, pathway=pathway)
-        completed_tasks = StudyTask.objects.filter(user=request.user, is_completed=True, pathway=pathway)
+        if not (FollowedPathway.objects.filter(user=request.user, pathway=pathway).exists() or pathway.user == request.user):
+            error_message = "You need to follow this pathway to plan or revise."
+        else:
+            to_study_tasks = StudyTask.objects.filter(user=request.user, is_completed=False, pathway=pathway)
+            completed_tasks = StudyTask.objects.filter(user=request.user, is_completed=True, pathway=pathway)
     else:
         to_study_tasks = []
         completed_tasks = []
@@ -28,7 +40,9 @@ def planning_view(request, pathway_id):
         'form': form,
         'to_study_tasks': to_study_tasks,
         'completed_tasks': completed_tasks,
-        'pathway':pathway
+        'pathway':pathway,
+        'error_message': error_message,
+        'is_user_following': is_user_following,
     })
 
 
@@ -42,13 +56,25 @@ def complete_task_view(request, pathway_id, task_id):
 
 def revision_view(request, pathway_id):
     pathway = get_object_or_404(Pathway, id=pathway_id)
+    error_message = None
+    user_revisions = []
+    completed_revisions = []
+
     if request.user.is_authenticated:
-        user_revisions = Revision.objects.filter(study_task__user=request.user, study_task__pathway=pathway_id, status=Revision.PENDING).order_by('due_date')
-        completed_revisions = Revision.objects.filter(study_task__user=request.user, study_task__pathway=pathway_id, status=Revision.COMPLETED).order_by('due_date')
+        is_user_following = request.user.followedpathway_set.filter(pathway=pathway).exists()
+    else:
+        is_user_following = False  
+          
+    if request.user.is_authenticated:
+        if not (FollowedPathway.objects.filter(user=request.user, pathway=pathway).exists() or pathway.user == request.user):
+            error_message = "You need to follow this pathway to plan or revise."
+        else:
+            user_revisions = Revision.objects.filter(study_task__user=request.user, study_task__pathway=pathway_id, status=Revision.PENDING).order_by('due_date')
+            completed_revisions = Revision.objects.filter(study_task__user=request.user, study_task__pathway=pathway_id, status=Revision.COMPLETED).order_by('due_date')
     else:
         user_revisions = []
         completed_revisions = []
-    return render(request, 'pathways/revision_template.html', {'revisions': user_revisions, 'completed_revisions': completed_revisions, 'pathway':pathway})
+    return render(request, 'pathways/revision_template.html', {'revisions': user_revisions, 'completed_revisions': completed_revisions, 'pathway':pathway, 'error_message': error_message, 'is_user_following': is_user_following,})
 
 def mark_revision_completed(request, revision_id):
     revision = get_object_or_404(Revision, id=revision_id)

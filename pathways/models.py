@@ -120,4 +120,13 @@ class Revision(models.Model):
             self.THIRD: 75,
             self.FOURTH: 100
         }.get(self.revision_type, 0)
+    
+class FollowedPathway(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    pathway = models.ForeignKey(Pathway, on_delete=models.CASCADE, related_name="followers")
+    followed_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ['user', 'pathway']
+
 

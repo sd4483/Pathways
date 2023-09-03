@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponseForbidden
 from django.db.models import Q
 from .forms import PathwayForm, LinkResourceForm, FileResourceForm, TextResourceForm, ImageResourceForm, PathwaySettingsForm, PathwayCommentsForm, PathwayRepliesForm
-from .models import Pathway, Comment, Reply
+from .models import Pathway, Comment, Reply, FollowedPathway
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
@@ -35,18 +35,23 @@ def create_pathway_view(request):
     return render(request, 'pathways/create_pathway_template.html', {'form': form})
 
 def single_pathway_view(request, pathway_id):
+    print("Inside single_pathway_view!")
     pathway = get_object_or_404(Pathway, pk=pathway_id)
     text_resource_form = TextResourceForm(prefix='text_resource')
     image_resource_form = ImageResourceForm(prefix='image_resource')
     link_resource_form = LinkResourceForm()
     file_resource_form = FileResourceForm()
-
+    if request.user.is_authenticated:
+        is_user_following = request.user.followedpathway_set.filter(pathway=pathway).exists()
+    else:
+        is_user_following = False
     context = {
         'pathway': pathway,
         'text_resource_form': text_resource_form,
         'image_resource_form': image_resource_form,
         'file_resource_form' : file_resource_form,
         'link_resource_form' : link_resource_form,
+        'is_user_following': is_user_following,
     }
     return render(request, 'pathways/single_pathway_template.html', context)
 
@@ -56,6 +61,10 @@ def resource_archive_view(request, pathway_id):
     image_resource_form = ImageResourceForm(prefix='image_resource')
     link_resource_form = LinkResourceForm()
     file_resource_form = FileResourceForm()
+    if request.user.is_authenticated:
+        is_user_following = request.user.followedpathway_set.filter(pathway=pathway).exists()
+    else:
+        is_user_following = False
 
     context = {
         'pathway': pathway,
@@ -63,6 +72,7 @@ def resource_archive_view(request, pathway_id):
         'image_resource_form': image_resource_form,
         'file_resource_form' : file_resource_form,
         'link_resource_form' : link_resource_form,
+        'is_user_following': is_user_following,
     }
     return render(request, 'pathways/resource_archive_template.html', context)
 
@@ -80,6 +90,11 @@ def downvote_pathway_view(request, pathway_id):
 
 def pathway_comments_view(request, pathway_id):
     pathway = get_object_or_404(Pathway, id=pathway_id)
+    
+    if request.user.is_authenticated:
+        is_user_following = request.user.followedpathway_set.filter(pathway=pathway).exists()
+    else:
+        is_user_following = False
 
     if request.method == "POST" and not request.user.is_authenticated:
         return HttpResponseForbidden("You need to login to comment.")
@@ -104,6 +119,7 @@ def pathway_comments_view(request, pathway_id):
         'pathway': pathway,
         'form': form,
         'comments': comments,
+        'is_user_following': is_user_following,
     })
 
 @login_required
@@ -215,4 +231,12 @@ def pathway_settings_view(request, pathway_id):
     else:
         form = PathwaySettingsForm(instance=pathway)
 
-    return render(request, 'pathways/pathway_settings_template.html', {'form': form, 'pathway': pathway, 'is_creator': is_creator})
+    return render(request, 'pathways/pathway_settings_template.html', {'form': form, 'pathway': pathway, 'is_creator': is_creator,})
+
+def follow_pathway(request, pathway_id):
+    pathway = get_object_or_404(Pathway, id=pathway_id)
+    if request.user.is_authenticated:
+        FollowedPathway.objects.create(user=request.user, pathway=pathway)
+        return redirect('single_pathway', pathway_id=pathway_id)
+    else:
+        return HttpResponseForbidden("You need to login to follow.")

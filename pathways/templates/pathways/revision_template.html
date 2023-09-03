@@ -5,104 +5,106 @@
 <div class="text-xl pb-2 font-bold">Revision for {{ pathway.title }}</div>
 
 {% if user.is_authenticated %}
-
-    <div class="my-4 grid grid-cols-2 gap-6 mb-10">
-        <!-- First Revision Box -->
-        <div class="rounded p-4 bg-slate-200">
-            <h3 class="font-bold mb-4">First Revision</h3>
-            {% for revision in revisions %}
-                {% if revision.revision_type == revision.FIRST %}
-                    <div class="flex justify-between gap-4 items-center my-2">
-                        <div class="flex justify-between items-center bg-slate-300 rounded p-2 w-full">
-                            <span>{{ revision.study_task.title }}</span>
-                            <span class="text-gray-700 text-sm">{{ revision.due_date }}</span>
+    {% if not error_message %}
+        <div class="my-4 grid grid-cols-2 gap-6 mb-10">
+            <!-- First Revision Box -->
+            <div class="rounded p-4 bg-slate-200">
+                <h3 class="font-bold mb-4">First Revision</h3>
+                {% for revision in revisions %}
+                    {% if revision.revision_type == revision.FIRST %}
+                        <div class="flex justify-between gap-4 items-center my-2">
+                            <div class="flex justify-between items-center bg-slate-300 rounded p-2 w-full">
+                                <span>{{ revision.study_task.title }}</span>
+                                <span class="text-gray-700 text-sm">{{ revision.due_date }}</span>
+                            </div>
+                            <button onclick="location.href='{% url 'mark_revision_completed' revision.id %}'" class="text-white bg-green-600 hover:bg-green-700 rounded px-4 py-2">
+                                ✓
+                            </button>
                         </div>
-                        <button onclick="location.href='{% url 'mark_revision_completed' revision.id %}'" class="text-white bg-green-600 hover:bg-green-700 rounded px-4 py-2">
-                            ✓
-                        </button>
+                    {% endif %}
+                {% endfor %}
+            </div>
+
+            <!-- Second Revision Box -->
+            <div class="bg-slate-200 rounded p-4">
+                <h3 class="font-bold mb-4">Second Revision</h3>
+                {% for revision in revisions %}
+                    {% if revision.revision_type == revision.SECOND %}
+                        <div class="flex justify-between gap-4 items-center my-2">
+                            <div class="flex justify-between items-center bg-slate-300 rounded p-2 w-full">
+                                <span>{{ revision.study_task.title }}</span>
+                                <span class="text-gray-700 text-sm">{{ revision.due_date }}</span>
+                            </div>
+                            <button onclick="location.href='{% url 'mark_revision_completed' revision.id %}'" class="text-white bg-green-600 hover:bg-green-700 rounded px-4 py-2">
+                                ✓
+                            </button>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+
+            <!-- Third Revision Box -->
+            <div class="bg-slate-200 rounded p-4">
+                <h3 class="font-bold mb-4">Third Revision</h3>
+                {% for revision in revisions %}
+                    {% if revision.revision_type == revision.THIRD %}
+                        <div class="flex justify-between gap-4 items-center my-2">
+                            <div class="flex justify-between items-center bg-slate-300 rounded p-2 w-full">
+                                <span>{{ revision.study_task.title }}</span>
+                                <span class="text-gray-700 text-sm">{{ revision.due_date }}</span>
+                            </div>
+                            <button onclick="location.href='{% url 'mark_revision_completed' revision.id %}'" class="text-white bg-green-600 hover:bg-green-700 rounded px-4 py-2">
+                                ✓
+                            </button>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+
+            <!-- Fourth Revision Box -->
+            <div class="bg-slate-200 rounded p-4">
+                <h3 class="font-bold mb-4">Fourth Revision</h3>
+                {% for revision in revisions %}
+                    {% if revision.revision_type == revision.FOURTH %}
+                        <div class="flex justify-between gap-4 items-center my-2">
+                            <div class="flex justify-between items-center bg-slate-300 rounded p-2 w-full">
+                                <span>{{ revision.study_task.title }}</span>
+                                <span class="text-gray-700 text-sm">{{ revision.due_date }}</span>
+                            </div>
+                            <button onclick="location.href='{% url 'mark_revision_completed' revision.id %}'" class="text-white bg-green-600 hover:bg-green-700 rounded px-4 py-2">
+                                ✓
+                            </button>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Completed Tasks List -->
+        <div class="bg-slate-200 p-4 rounded">
+            <h3 class="mb-4 font-bold">Completed Revisions</h3>
+            {% for revision in completed_revisions %}
+                {% if revision.status == 'completed' %}
+                    <div class="mb-4 p-4 bg-slate-300 line-through text-gray-600 rounded">
+                        {{ revision.study_task.title }}
                     </div>
                 {% endif %}
             {% endfor %}
         </div>
+    {% endif %}
 
-        <!-- Second Revision Box -->
-        <div class="bg-slate-200 rounded p-4">
-            <h3 class="font-bold mb-4">Second Revision</h3>
-            {% for revision in revisions %}
-                {% if revision.revision_type == revision.SECOND %}
-                    <div class="flex justify-between gap-4 items-center my-2">
-                        <div class="flex justify-between items-center bg-slate-300 rounded p-2 w-full">
-                            <span>{{ revision.study_task.title }}</span>
-                            <span class="text-gray-700 text-sm">{{ revision.due_date }}</span>
-                        </div>
-                        <button onclick="location.href='{% url 'mark_revision_completed' revision.id %}'" class="text-white bg-green-600 hover:bg-green-700 rounded px-4 py-2">
-                            ✓
-                        </button>
-                    </div>
-                {% endif %}
-            {% endfor %}
-        </div>
-
-        <!-- Third Revision Box -->
-        <div class="bg-slate-200 rounded p-4">
-            <h3 class="font-bold mb-4">Third Revision</h3>
-            {% for revision in revisions %}
-                {% if revision.revision_type == revision.THIRD %}
-                    <div class="flex justify-between gap-4 items-center my-2">
-                        <div class="flex justify-between items-center bg-slate-300 rounded p-2 w-full">
-                            <span>{{ revision.study_task.title }}</span>
-                            <span class="text-gray-700 text-sm">{{ revision.due_date }}</span>
-                        </div>
-                        <button onclick="location.href='{% url 'mark_revision_completed' revision.id %}'" class="text-white bg-green-600 hover:bg-green-700 rounded px-4 py-2">
-                            ✓
-                        </button>
-                    </div>
-                {% endif %}
-            {% endfor %}
-        </div>
-
-        <!-- Fourth Revision Box -->
-        <div class="bg-slate-200 rounded p-4">
-            <h3 class="font-bold mb-4">Fourth Revision</h3>
-            {% for revision in revisions %}
-                {% if revision.revision_type == revision.FOURTH %}
-                    <div class="flex justify-between gap-4 items-center my-2">
-                        <div class="flex justify-between items-center bg-slate-300 rounded p-2 w-full">
-                            <span>{{ revision.study_task.title }}</span>
-                            <span class="text-gray-700 text-sm">{{ revision.due_date }}</span>
-                        </div>
-                        <button onclick="location.href='{% url 'mark_revision_completed' revision.id %}'" class="text-white bg-green-600 hover:bg-green-700 rounded px-4 py-2">
-                            ✓
-                        </button>
-                    </div>
-                {% endif %}
-            {% endfor %}
-        </div>
-    </div>
-
-    <!-- Completed Tasks List -->
-    <div class="bg-slate-200 p-4 rounded">
-        <h3 class="mb-4 font-bold">Completed Revisions</h3>
-        {% for revision in completed_revisions %}
-            {% if revision.status == 'completed' %}
-                <div class="mb-4 p-4 bg-slate-300 line-through text-gray-600 rounded">
-                    {{ revision.study_task.title }}
-                </div>
-            {% endif %}
-        {% endfor %}
-    </div>
-
-
-    
-{% endif %}
-
-{% if not user.is_authenticated %}
-    <div class="text-base text-gray-700">
+{% else %}
+    <div>
         Only registered users can create tasks. <br>
         If you are a registered user, login by clicking the button above.
-    </div>
+    </div> 
 {% endif %}
 
+{% if error_message %}
+    <div class="alert alert-danger">
+        {{ error_message }}
+    </div>
+{% endif %}
     
 
 {% endblock %}

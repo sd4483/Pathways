@@ -13,9 +13,6 @@
                         </div>
                         <div class="pseudo-element"></div>
                     </div>
-
-                    
-                    
                     <div class="grid grid-cols-7 gap-4">
                         <div class="p-2 bg-white text-gray-950 rounded justify-self-center">{{ pathway.votes }}</div> 
                         <div class="grid grid-cols-2 gap-4 col-span-6 text-white">
@@ -41,18 +38,19 @@
                     <div class="bg-slate-300 p-3 rounded">
                         <a href="{% url 'revision' pathway.id %}">Revision</a>
                     </div>
-                    <div class="bg-slate-300 p-3 rounded">
-                        <a href="{% url 'pathway_settings' pathway.id %}">Settings</a>
-                    </div>
-
-                    {% if user.is_authenticated and pathway.user != user and pathway.visibility == "public" %}
-                        <div class="bg-emerald-600 p-3 rounded text-white">
-                            Follow
+                    {% if user.is_authenticated and pathway.user == user %}
+                        <div class="bg-slate-300 p-3 rounded">
+                            <a href="{% url 'pathway_settings' pathway.id %}">Settings</a>
                         </div>
                     {% endif %}
+                    {% if user.is_authenticated %}
+                        {% if pathway.user != user and pathway.visibility == "public" and not is_user_following %}
+                            <div class="bg-gray-900 p-3 rounded text-white">
+                                <a href="{% url 'follow_pathway' pathway.id %}">Follow</a>
+                            </div>
+                        {% endif %}
+                    {% endif %}
 
-                    
-                    
                 </div>
                 <div class="col-span-3 p-4 text-black">
                     {% block pathway_content %}

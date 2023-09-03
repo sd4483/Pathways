@@ -7,7 +7,7 @@ urlpatterns = [
     path('create/', views.create_pathway_view, name='create_pathway'),
     path('tinymce/', include('tinymce.urls')),
     path('pathway/<int:pathway_id>/', views.single_pathway_view, name='single_pathway'),
-    path('pathway/<int:pathway_id>/resources', views.resource_archive_view, name='resource_archive'),
+    path('pathway/<int:pathway_id>/resources/', views.resource_archive_view, name='resource_archive'),
     path('pathway/<int:pathway_id>/settings/', views.pathway_settings_view, name='pathway_settings'),
     path('pathway/<int:pathway_id>/discussion/', views.pathway_comments_view, name='pathway_comments'),
     path('pathway/discussion/replies/<int:comment_id>/', views.pathway_reply_view, name='pathway_comments_replies'),
@@ -22,4 +22,5 @@ urlpatterns = [
     path('pathway/<int:pathway_id>/revision/', revision_view, name='revision'),
     path('pathway/<int:pathway_id>/complete-task/<int:task_id>/', complete_task_view, name='complete_task'),
     path('mark_revision_completed/<int:revision_id>/', mark_revision_completed, name='mark_revision_completed'),
+    path('pathways/<int:pathway_id>/follow/', views.follow_pathway, name='follow_pathway'),
 ]
