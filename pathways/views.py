@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
 from django.db.models import Q
 from .forms import PathwayForm, LinkResourceForm, FileResourceForm, TextResourceForm, ImageResourceForm, PathwaySettingsForm, PathwayCommentsForm, PathwayRepliesForm
 from .models import Pathway, Comment, Reply
@@ -77,11 +77,13 @@ def downvote_pathway_view(request, pathway_id):
     pathway.save()
     return redirect('resource_archive', pathway_id=pathway_id)
 
-@login_required
 def pathway_comments_view(request, pathway_id):
     pathway = get_object_or_404(Pathway, id=pathway_id)
+
+    if request.method == "POST" and not request.user.is_authenticated:
+        return HttpResponseForbidden("You need to login to comment.")
     
-    if request.method == "POST":
+    if request.method == "POST" and request.user.is_authenticated:
         parent_comment_id = request.POST.get('parent_comment_id')
         parent_comment = None
         if parent_comment_id:

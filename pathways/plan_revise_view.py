@@ -17,8 +17,12 @@ def planning_view(request, pathway_id):
     else:
         form = StudyTaskForm()
 
-    to_study_tasks = StudyTask.objects.filter(user=request.user, is_completed=False, pathway=pathway)
-    completed_tasks = StudyTask.objects.filter(user=request.user, is_completed=True, pathway=pathway)
+    if request.user.is_authenticated:
+        to_study_tasks = StudyTask.objects.filter(user=request.user, is_completed=False, pathway=pathway)
+        completed_tasks = StudyTask.objects.filter(user=request.user, is_completed=True, pathway=pathway)
+    else:
+        to_study_tasks = []
+        completed_tasks = []
 
     return render(request, 'pathways/planning_template.html', {
         'form': form,
@@ -38,8 +42,12 @@ def complete_task_view(request, pathway_id, task_id):
 
 def revision_view(request, pathway_id):
     pathway = get_object_or_404(Pathway, id=pathway_id)
-    user_revisions = Revision.objects.filter(study_task__user=request.user, study_task__pathway=pathway_id, status=Revision.PENDING).order_by('due_date')
-    completed_revisions = Revision.objects.filter(study_task__user=request.user, study_task__pathway=pathway_id, status=Revision.COMPLETED).order_by('due_date')
+    if request.user.is_authenticated:
+        user_revisions = Revision.objects.filter(study_task__user=request.user, study_task__pathway=pathway_id, status=Revision.PENDING).order_by('due_date')
+        completed_revisions = Revision.objects.filter(study_task__user=request.user, study_task__pathway=pathway_id, status=Revision.COMPLETED).order_by('due_date')
+    else:
+        user_revisions = []
+        completed_revisions = []
     return render(request, 'pathways/revision_template.html', {'revisions': user_revisions, 'completed_revisions': completed_revisions, 'pathway':pathway})
 
 def mark_revision_completed(request, revision_id):
