@@ -1,49 +1,122 @@
 {% extends 'shared/header.html' %}
 
 {% block content %}
-    <div class="flex justify-center">
+    <div class="grid grid-flow-row justify-items-center">
+
+        <!-- Welcome greeting for new users -->
+        {% if not user.is_authenticated %}
         <div class="w-full max-w-3xl mx-4 mb-4 bg-slate-200 p-4 rounded">
+            <div class="text-center">
+                <p class="text-xl font-bold mb-2 text-black">Own Your Learning</p>
+                <p class="mb-2">Learn anything you want to learn by gathering your resources and planning your learning.
+                    Share your learning. Keep it public/private. Discuss with others and do a lot more.</p>
+                <p class="uppercase"><a href="{% url 'login' %}" class="underline">Login</a>/<a href="{% url 'register' %}" class="underline">Register</a> to get started.</p>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="w-full max-w-3xl mx-4 mb-4 bg-slate-200 px-4 pt-4 rounded">
             <div class="divide-y divide-slate-800 mb-4">
+                {% if user.is_authenticated %}
+                <!-- Pathways headings and buttons -->
                 <div class="flex justify-between mb-4 items-center">
                     <div class="text-xl font-bold text-black text-center">Pathways Created</div>
                     <div class="gap-4">
                         <button id="edit-button" class="px-4 py-1 rounded bg-slate-900 text-white text-sm hover:bg-slate-800">Edit</button>
                         <button id="create-button" class="px-4 py-1 rounded bg-blue-600 text-white text-sm hover:bg-blue-700">Create New</button>
                     </div>
-                    
                 </div>
-                <div class="pseudo-element"></div>
-            </div>
-        
-            {% for pathway in pathways %}
-            
-            <div class="flex items-center mb-2">
-                <div class="mr-4 hidden delete-button"> 
-                    {% if pathway.user == request.user %}
-                        <form method="post" action="{% url 'delete_pathway' pathway.id %}">
-                            {% csrf_token %}
-                            <button type="submit" class="bg-red-500 hover:bg-red-600 px-2 py-2 text-sm text-white rounded">Delete</button>
-                        </form>
-                    {% else %}
-                        <button disabled class="bg-gray-300 px-2 py-2 text-sm rounded cursor-not-allowed delete-tooltip" title="Pathways created by other users cannot be deleted.">Delete</button>
-                    {% endif %}
-                </div>
-            
-                <div class="flex justify-between py-2 px-4 bg-slate-300 rounded text-black items-center w-full">
-                    <div>
-                        <a class="capitalize" href="{% url 'resource_archive' pathway.id %}">{{ pathway.title }}</a>
+                <div class="mb-6">
+                    <div class="font-bold text-black my-4">Your Private Pathways</div>
+                    {% for pathway in pathways %}
+                    {% if pathway.visibility == 'private' and pathway.user == request.user %}
+                    <div class="flex items-center mb-2">                
+                        <!-- For deleting pathways -->
+                        <div class="mr-4 hidden delete-button"> 
+                            {% if pathway.user == request.user %}
+                                <form method="post" action="{% url 'delete_pathway' pathway.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="bg-red-500 hover:bg-red-600 px-2 py-2 text-sm text-white rounded">Delete</button>
+                                </form>
+                            {% else %}
+                                <button disabled class="bg-gray-300 px-2 py-2 text-sm rounded cursor-not-allowed delete-tooltip" title="Pathways created by other users cannot be deleted.">Delete</button>
+                            {% endif %}
+                        </div>
+                        <!-- Actual pathways list -->
+                        <div class="flex justify-between py-2 px-4 bg-slate-300 rounded text-black items-center w-full">
+                            <div>
+                                <a class="capitalize" href="{% url 'resource_archive' pathway.id %}">{{ pathway.title }}</a>
+                            </div>
+                            <div class="text-sm text-gray-600">created by: {{ pathway.user }}</div>
+                        </div>
                     </div>
-                    <div class="text-sm text-gray-600">created by: {{ pathway.user }}</div>
+                    {% endif %}
+                    {% endfor %}
                 </div>
-            
-            </div>
 
-            {% empty %}
-                No pathways yet.
-            {% endfor %}
+                <div>
+                    <div class="font-bold text-black my-4">Public Pathways</div>
+                    {% for pathway in pathways %}
+                    {% if pathway.visibility == 'public' %}
+                    <div class="flex items-center mb-2">                
+                            <!-- For deleting pathways -->
+                            <div class="mr-4 hidden delete-button"> 
+                                {% if pathway.user == request.user %}
+                                    <form method="post" action="{% url 'delete_pathway' pathway.id %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="bg-red-500 hover:bg-red-600 px-2 py-2 text-sm text-white rounded">Delete</button>
+                                    </form>
+                                {% else %}
+                                    <button disabled class="bg-gray-300 px-2 py-2 text-sm rounded cursor-not-allowed delete-tooltip" title="Pathways created by other users cannot be deleted.">Delete</button>
+                                {% endif %}
+                            </div>
+                            <!-- Actual pathways list -->
+                            <div class="flex justify-between py-2 px-4 bg-slate-300 rounded text-black items-center w-full">
+                                <div>
+                                    <a class="capitalize" href="{% url 'resource_archive' pathway.id %}">{{ pathway.title }}</a>
+                                </div>
+                                <div class="text-sm text-gray-600">created by: {{ pathway.user }}</div>
+                            </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+                
+                {% else %}
+                <div>
+                    <div class="text-xl font-bold text-black text-center mb-4">Public Pathways Created by Users</div>
+                    {% for pathway in pathways %}
+                    <div class="flex items-center mb-2">                
+                        {% if pathway.visibility == 'public' %}
+                            <!-- For deleting pathways -->
+                            <div class="mr-4 hidden delete-button"> 
+                                {% if pathway.user == request.user %}
+                                    <form method="post" action="{% url 'delete_pathway' pathway.id %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="bg-red-500 hover:bg-red-600 px-2 py-2 text-sm text-white rounded">Delete</button>
+                                    </form>
+                                {% else %}
+                                    <button disabled class="bg-gray-300 px-2 py-2 text-sm rounded cursor-not-allowed delete-tooltip" title="Pathways created by other users cannot be deleted.">Delete</button>
+                                {% endif %}
+                            </div>
+                            <!-- Actual pathways list -->
+                            <div class="flex justify-between py-2 px-4 bg-slate-300 rounded text-black items-center w-full">
+                                <div>
+                                    <a class="capitalize" href="{% url 'resource_archive' pathway.id %}">{{ pathway.title }}</a>
+                                </div>
+                                <div class="text-sm text-gray-600">created by: {{ pathway.user }}</div>
+                            </div>
+                        {% endif %}
+                    </div>
+                    {% empty %}
+                        No pathways yet.
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
         </div>
-        
     </div>
+
     <script>
         var deleteButtons = document.querySelectorAll('.delete-button');
         deleteButtons.forEach(function(button) {
