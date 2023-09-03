@@ -9,11 +9,16 @@ from django.contrib import messages
 # Create your views here.
 
 def view_pathway_view(request):
+    followed_pathways = []
     if request.user.is_authenticated:
+        followed_pathway_ids = request.user.followedpathway_set.all().values_list('pathway', flat=True)
+        followed_pathways = Pathway.objects.filter(id__in=followed_pathway_ids)
         pathways = Pathway.objects.filter(Q(visibility='public') | Q(user=request.user))
     else:
         pathways = Pathway.objects.filter(visibility='public')
-    return render(request, 'pathways/view_pathway_template.html', {'pathways': pathways})
+    
+    return render(request, 'pathways/view_pathway_template.html', {'pathways': pathways, 'followed_pathways': followed_pathways})
+
 
 def delete_pathway_view(request, pathway_id):
     pathway = get_object_or_404(Pathway, pk=pathway_id)
