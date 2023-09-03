@@ -9,21 +9,6 @@
             <div>Learn anything you want to learn by gathering your resources and planning your learning.
                 Share your learning. Keep it public/private. Discuss with others and do a lot more.
             </div>
-            {% for pathway in pathways %}
-            
-            <div class="flex items-center mb-2">            
-                <div class="flex justify-between py-2 px-4 bg-slate-300 rounded text-black items-center w-full">
-                    <div>
-                        <a class="capitalize" href="{% url 'resource_archive' pathway.id %}">{{ pathway.title }}</a>
-                    </div>
-                    <div class="text-sm text-gray-600">created by: {{ pathway.user }}</div>
-                </div>
-            
-            </div>
-
-            {% empty %}
-                No pathways yet.
-            {% endfor %}
         </div>
     </div>
 </div>

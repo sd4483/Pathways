@@ -11,13 +11,7 @@ def view_pathway_view(request):
         pathways = Pathway.objects.filter(Q(visibility='public') | Q(user=request.user))
     else:
         pathways = Pathway.objects.filter(visibility='public')
-
-    if 'users/home' in request.path:
-        template_name = 'users/home_template.html'
-    else:
-        template_name = 'pathways/view_pathway_template.html'
-
-    return render(request, template_name, {'pathways': pathways})
+    return render(request, 'pathways/view_pathway_template.html', {'pathways': pathways})
 
 def delete_pathway_view(request, pathway_id):
     pathway = get_object_or_404(Pathway, pk=pathway_id)

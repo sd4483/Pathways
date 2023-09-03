@@ -13,5 +13,5 @@ def register_view(request):
         form = UserCreationForm()
     return render(request, 'registration/register_template.html', {'form': form})
 
-# def home_view(request):
-#     return render(request, 'users/home_template.html')
+def home_view(request):
+    return render(request, 'users/home_template.html')
