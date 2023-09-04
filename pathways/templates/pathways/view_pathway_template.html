@@ -26,6 +26,7 @@
                         <button id="create-button" class="px-4 py-1 rounded bg-blue-600 text-white text-sm hover:bg-blue-700">Create New</button>
                     </div>
                 </div>
+                {% if private_pathways_count > 0 %}
                 <div class="mb-6">
                     <div class="font-bold text-black my-4">Your Private Pathways</div>
                     {% for pathway in pathways %}
@@ -53,6 +54,7 @@
                         {% endif %}
                     {% endfor %}
                 </div>
+                {% endif %}
 
                 {% if followed_pathways %}
                 <div class="mb-6">

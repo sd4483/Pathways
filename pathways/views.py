@@ -13,11 +13,13 @@ def view_pathway_view(request):
     if request.user.is_authenticated:
         followed_pathway_ids = request.user.followedpathway_set.all().values_list('pathway', flat=True)
         followed_pathways = Pathway.objects.filter(id__in=followed_pathway_ids)
+        private_pathways_count = Pathway.objects.filter(visibility='private').count()
         pathways = Pathway.objects.filter(Q(visibility='public') | Q(user=request.user))
     else:
+        private_pathways_count = 0
         pathways = Pathway.objects.filter(visibility='public')
     
-    return render(request, 'pathways/view_pathway_template.html', {'pathways': pathways, 'followed_pathways': followed_pathways})
+    return render(request, 'pathways/view_pathway_template.html', {'pathways': pathways, 'followed_pathways': followed_pathways, 'private_pathways_count' : private_pathways_count})
 
 
 def delete_pathway_view(request, pathway_id):
@@ -50,6 +52,7 @@ def single_pathway_view(request, pathway_id):
         is_user_following = request.user.followedpathway_set.filter(pathway=pathway).exists()
     else:
         is_user_following = False
+        
     context = {
         'pathway': pathway,
         'text_resource_form': text_resource_form,
