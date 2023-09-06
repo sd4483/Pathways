@@ -230,18 +230,30 @@
         const fileFormClose = document.getElementById('file-form-close');
         const linkFormClose = document.getElementById('link-form-close');
 
-        textFormButton.addEventListener('click', function() {
-            textForm.removeAttribute('hidden');
-        });
-        imageFormButton.addEventListener('click', function() {
-            imageForm.removeAttribute('hidden');
-        });
-        fileFormButton.addEventListener('click', function() {
-            fileForm.removeAttribute('hidden');
-        });
-        linkFormButton.addEventListener('click', function() {
-            linkForm.removeAttribute('hidden');
-        });
+        if(textFormButton && textForm){
+            textFormButton.addEventListener('click', function() {
+                textForm.removeAttribute('hidden');
+            });
+        }
+
+        if(imageFormButton && imageForm){
+            imageFormButton.addEventListener('click', function() {
+                imageForm.removeAttribute('hidden');
+            });
+        }
+        
+        if(fileFormButton && fileForm){
+            fileFormButton.addEventListener('click', function() {
+                fileForm.removeAttribute('hidden');
+            });
+        }
+        
+        if(linkFormButton && linkForm){
+            linkFormButton.addEventListener('click', function() {
+                linkForm.removeAttribute('hidden');
+            });
+        }
+        
 
         textFormClose.addEventListener('click', function() {
         textForm.setAttribute('hidden', true);
@@ -282,6 +294,7 @@
                 button.addEventListener('click', () => {
                     const resourceContent = button.nextElementSibling;
                     resourceContent.classList.toggle('hidden');
+                    console.log('button clicked')
                 });
             });
         });

@@ -42,7 +42,6 @@ def create_pathway_view(request):
     return render(request, 'pathways/create_pathway_template.html', {'form': form})
 
 def single_pathway_view(request, pathway_id):
-    print("Inside single_pathway_view!")
     pathway = get_object_or_404(Pathway, pk=pathway_id)
     text_resource_form = TextResourceForm(prefix='text_resource')
     image_resource_form = ImageResourceForm(prefix='image_resource')
@@ -63,26 +62,6 @@ def single_pathway_view(request, pathway_id):
     }
     return render(request, 'pathways/single_pathway_template.html', context)
 
-def resource_archive_view(request, pathway_id):
-    pathway = get_object_or_404(Pathway, pk=pathway_id)
-    text_resource_form = TextResourceForm(prefix='text_resource')
-    image_resource_form = ImageResourceForm(prefix='image_resource')
-    link_resource_form = LinkResourceForm()
-    file_resource_form = FileResourceForm()
-    if request.user.is_authenticated:
-        is_user_following = request.user.followedpathway_set.filter(pathway=pathway).exists()
-    else:
-        is_user_following = False
-
-    context = {
-        'pathway': pathway,
-        'text_resource_form': text_resource_form,
-        'image_resource_form': image_resource_form,
-        'file_resource_form' : file_resource_form,
-        'link_resource_form' : link_resource_form,
-        'is_user_following': is_user_following,
-    }
-    return render(request, 'pathways/resource_archive_template.html', context)
 
 def upvote_pathway_view(request, pathway_id):
     pathway = get_object_or_404(Pathway, id=pathway_id)
@@ -156,70 +135,6 @@ def pathway_reply_view(request, comment_id):
         'form': form,
     })
 
-
-def text_resource_view(request, pathway_id):
-    print(request.POST)
-    pathway = get_object_or_404(Pathway, pk=pathway_id)
-    text_resource_form = TextResourceForm(request.POST or None, prefix='text_resource')
-
-    if request.method == 'POST':
-        if 'text_resource' in request.POST:
-            if text_resource_form.is_valid():
-                text_resource = text_resource_form.save(commit=False)
-                text_resource.pathway = pathway
-                text_resource.save()
-                return redirect('resource_archive', pathway_id=pathway_id)
-    
-    return render(request, 'pathways/resource_archive_template.html', {'pathway':pathway, 'text_resource_form':text_resource_form})
-
-def link_resource_view(request, pathway_id):
-    print(request.POST)
-    pathway = get_object_or_404(Pathway, pk=pathway_id)
-
-    if request.method == 'POST':
-        link_resource_form = LinkResourceForm(request.POST)
-        if link_resource_form.is_valid():
-            link_resource = link_resource_form.save(commit=False)
-            link_resource.pathway = pathway
-            link_resource.save()
-            return redirect('resource_archive', pathway_id=pathway_id)
-    else:
-        link_resource_form = LinkResourceForm()
-    
-    return render(request, 'pathways/resource_archive_template.html', {'pathway':pathway, 'link_resource_form':link_resource_form})
-
-
-def image_resource_view(request, pathway_id):
-    print(request.POST)
-    pathway = get_object_or_404(Pathway, pk=pathway_id)
-    image_resource_form = ImageResourceForm(request.POST or None, request.FILES or None, prefix='image_resource')
-
-    if request.method == 'POST':
-        if 'image_resource' in request.POST:
-            if image_resource_form.is_valid():
-                image_resource = image_resource_form.save(commit=False)
-                image_resource.pathway = pathway
-                image_resource.save()
-                return redirect('resource_archive', pathway_id=pathway_id)
-    
-    return render(request, 'pathways/resource_archive_template.html', {'pathway':pathway, 'image_resource_form':image_resource_form})
-
-def file_resource_view(request, pathway_id):
-    print(request.POST)
-    print(request.FILES)
-    pathway = get_object_or_404(Pathway, pk=pathway_id)
-
-    if request.method == 'POST':
-        file_resource_form = FileResourceForm(request.POST or None, request.FILES or None)
-        if file_resource_form.is_valid():
-            file_resource = file_resource_form.save(commit=False)
-            file_resource.pathway = pathway
-            file_resource.save()
-            return redirect('resource_archive', pathway_id=pathway_id)
-    else:
-        file_resource_form = FileResourceForm()
-        
-    return render(request, 'pathways/resource_archive_template.html', {'pathway':pathway, 'file_resource_form':file_resource_form})
 
 def pathway_settings_view(request, pathway_id):
     pathway = get_object_or_404(Pathway, id=pathway_id)
