@@ -87,7 +87,7 @@
                 <div>
                     <div class="font-bold text-black my-4">Public Pathways</div>
                     {% for pathway in pathways %}
-                        {% if pathway.visibility == 'public' %}
+                        {% if pathway.visibility == 'public' and pathway not in followed_pathways %}
                         <div class="flex items-center mb-2">                
                                 <!-- For deleting pathways -->
                                 <div class="mr-4 hidden delete-button"> 

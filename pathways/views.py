@@ -6,8 +6,6 @@ from .models import Pathway, Comment, Reply, FollowedPathway
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
-# Create your views here.
-
 def view_pathway_view(request):
     followed_pathways = []
     if request.user.is_authenticated:
@@ -19,7 +17,10 @@ def view_pathway_view(request):
         private_pathways_count = 0
         pathways = Pathway.objects.filter(visibility='public')
     
-    return render(request, 'pathways/view_pathway_template.html', {'pathways': pathways, 'followed_pathways': followed_pathways, 'private_pathways_count' : private_pathways_count})
+    return render(request, 'pathways/view_pathway_template.html', 
+                  {'pathways': pathways, 
+                   'followed_pathways': followed_pathways, 
+                   'private_pathways_count' : private_pathways_count,})
 
 
 def delete_pathway_view(request, pathway_id):
@@ -160,6 +161,20 @@ def follow_pathway(request, pathway_id):
     pathway = get_object_or_404(Pathway, id=pathway_id)
     if request.user.is_authenticated:
         FollowedPathway.objects.create(user=request.user, pathway=pathway)
-        return redirect('single_pathway', pathway_id=pathway_id)
+        return redirect('planning', pathway_id=pathway_id)
     else:
         return HttpResponseForbidden("You need to login to follow.")
+    
+def unfollow_pathway(request, pathway_id):
+    pathway = get_object_or_404(Pathway, id=pathway_id)
+    if request.user.is_authenticated:
+        followed_pathway = FollowedPathway.objects.filter(user=request.user, pathway=pathway).first()
+        if followed_pathway:
+            followed_pathway.delete()
+            return redirect('resource_archive', pathway_id=pathway_id)
+        else:
+            messages.warning(request, 'You were not following this pathway.')
+            return redirect('resource_archive', pathway_id=pathway_id)
+    else:
+        return HttpResponseForbidden("You need to login to unfollow.")
+

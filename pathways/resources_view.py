@@ -27,6 +27,38 @@ def resource_archive_view(request, pathway_id):
     }
     return render(request, 'pathways/resource_archive_template.html', context)
 
+def resource_sorted_view(request, pathway_id):
+    pathway = get_object_or_404(Pathway, pk=pathway_id)
+    text_resource_form = TextResourceForm(prefix='text_resource')
+    image_resource_form = ImageResourceForm(prefix='image_resource')
+    link_resource_form = LinkResourceForm()
+    file_resource_form = FileResourceForm()
+
+    text_resources = [(resource, 'text') for resource in pathway.text_resources.all()]
+    image_resources = [(resource, 'image') for resource in pathway.image_resources.all()]
+    file_resources = [(resource, 'file') for resource in pathway.file_resources.all()]
+    link_resources = [(resource, 'link') for resource in pathway.link_resources.all()]
+
+    resources = text_resources + image_resources + file_resources + link_resources
+    
+    resources_sorted = sorted(resources, key=lambda x: x[0].created_at, reverse=True)
+
+    if request.user.is_authenticated:
+        is_user_following = request.user.followedpathway_set.filter(pathway=pathway).exists()
+    else:
+        is_user_following = False
+
+    context = {
+        'pathway': pathway,
+        'text_resource_form': text_resource_form,
+        'image_resource_form': image_resource_form,
+        'file_resource_form' : file_resource_form,
+        'link_resource_form' : link_resource_form,
+        'is_user_following': is_user_following,
+        'resources_sorted': resources_sorted,
+    }
+    return render(request, 'pathways/resource_sorted_template.html', context)
+
 def text_resource_view(request, pathway_id):
     pathway = get_object_or_404(Pathway, pk=pathway_id)
     text_resource_form = TextResourceForm(request.POST or None, prefix='text_resource')

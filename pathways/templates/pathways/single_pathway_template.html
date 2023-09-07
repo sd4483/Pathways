@@ -38,18 +38,24 @@
                     <div class="bg-slate-300 p-3 rounded">
                         <a href="{% url 'revision' pathway.id %}">Revision</a>
                     </div>
-                    {% if user.is_authenticated and pathway.user == user %}
-                        <div class="bg-slate-300 p-3 rounded">
-                            <a href="{% url 'pathway_settings' pathway.id %}">Settings</a>
-                        </div>
-                    {% endif %}
                     {% if user.is_authenticated %}
+                        {% if pathway.user == user %}
+                            <div class="bg-slate-300 p-3 rounded">
+                                <a href="{% url 'pathway_settings' pathway.id %}">Settings</a>
+                            </div>
+                        {% endif %}
                         {% if pathway.user != user and pathway.visibility == "public" and not is_user_following %}
-                            <div class="bg-gray-900 p-3 rounded text-white">
+                            <div class="bg-emerald-700 p-3 rounded text-white">
                                 <a href="{% url 'follow_pathway' pathway.id %}">Follow</a>
                             </div>
                         {% endif %}
+                        {% if pathway.user != user and pathway.visibility == "public" and is_user_following %}
+                            <div class="bg-gray-400 p-3 rounded">
+                                <a href="{% url 'unfollow_pathway' pathway.id %}">Unfollow</a>
+                            </div>
+                        {% endif %}
                     {% endif %}
+
 
                 </div>
                 <div class="col-span-3 p-4 text-black">
@@ -59,9 +65,124 @@
                 </div>
             </div>
             
-
-
         </div>
     </div>
+
+    <script>
+        const textForm = document.getElementById('text-form');
+        const imageForm = document.getElementById('image-form');
+        const fileForm = document.getElementById('file-form');
+        const linkForm = document.getElementById('link-form');
+
+        const textFormButton = document.getElementById('text-form-button');
+        const imageFormButton = document.getElementById('image-form-button');
+        const fileFormButton = document.getElementById('file-form-button');
+        const linkFormButton = document.getElementById('link-form-button');
+
+        const textFormClose = document.getElementById('text-form-close');
+        const imageFormClose = document.getElementById('image-form-close');
+        const fileFormClose = document.getElementById('file-form-close');
+        const linkFormClose = document.getElementById('link-form-close');
+
+        if(textFormButton && textForm){
+            textFormButton.addEventListener('click', function() {
+                textForm.removeAttribute('hidden');
+            });
+        }
+
+        if(imageFormButton && imageForm){
+            imageFormButton.addEventListener('click', function() {
+                imageForm.removeAttribute('hidden');
+            });
+        }
+        
+        if(fileFormButton && fileForm){
+            fileFormButton.addEventListener('click', function() {
+                fileForm.removeAttribute('hidden');
+            });
+        }
+        
+        if(linkFormButton && linkForm){
+            linkFormButton.addEventListener('click', function() {
+                linkForm.removeAttribute('hidden');
+            });
+        }
+        
+
+        textFormClose.addEventListener('click', function() {
+        textForm.setAttribute('hidden', true);
+        });
+        imageFormClose.addEventListener('click', function() {
+        imageForm.setAttribute('hidden', true);
+        });
+        fileFormClose.addEventListener('click', function() {
+        fileForm.setAttribute('hidden', true);
+        });
+        linkFormClose.addEventListener('click', function() {
+        linkForm.setAttribute('hidden', true);
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const textContent = document.getElementById('text-resource-content');
+            
+            document.getElementById('text-resource-button').addEventListener('click', function() {
+                textContent.classList.toggle('hidden');
+            });
+            
+            document.querySelectorAll('.toggle-text-resource').forEach(button => {
+                button.addEventListener('click', () => {
+                    const resourceContent = button.nextElementSibling;
+                    resourceContent.classList.toggle('hidden');
+                });
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const imageContent = document.getElementById('image-resource-content');
+            
+            document.getElementById('image-resource-button').addEventListener('click', function() {
+                imageContent.classList.toggle('hidden');
+            });
+            
+            document.querySelectorAll('.toggle-image-resource').forEach(button => {
+                button.addEventListener('click', () => {
+                    const resourceContent = button.nextElementSibling;
+                    resourceContent.classList.toggle('hidden');
+                    console.log('button clicked')
+                });
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const fileContent = document.getElementById('file-resource-content');
+            
+            document.getElementById('file-resource-button').addEventListener('click', function() {
+                fileContent.classList.toggle('hidden');
+            });
+            
+            document.querySelectorAll('.toggle-file-resource').forEach(button => {
+                button.addEventListener('click', () => {
+                    const resourceContent = button.nextElementSibling;
+                    resourceContent.classList.toggle('hidden');
+                });
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const linkContent = document.getElementById('link-resource-content');
+            
+            document.getElementById('link-resource-button').addEventListener('click', function() {
+                linkContent.classList.toggle('hidden');
+            });
+            
+            document.querySelectorAll('.toggle-link-resource').forEach(button => {
+                button.addEventListener('click', () => {
+                    const resourceContent = button.nextElementSibling;
+                    resourceContent.classList.toggle('hidden');
+                });
+            });
+        });
+
+    </script>
         
 {% endblock %}

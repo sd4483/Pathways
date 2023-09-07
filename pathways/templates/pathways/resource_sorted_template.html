@@ -1,7 +1,6 @@
 {% extends 'pathways/single_pathway_template.html' %}
 
 {% block pathway_content %}
-
     <div class="text-xl pb-2 font-bold">Resource Archive</div>
             
     <div class="py-4 font-bold">Add Resources</div>
@@ -115,114 +114,88 @@
         </form>
     </div>
 
-    <div class="py-2 rounded flex justify-between items-center">
+    <div class="py-2 mb-4 rounded flex justify-between items-center">
         <div class="font-bold">View Resources</div>
         <div class="gap-4 flex">
             <div class="py-1 px-2 text-black">
-                Grouped
+                Sorted
             </div>
             <div class="py-1 px-2 bg-gray-900 rounded text-white">
-                <a href="{% url 'resource_sorted' pathway.id %}">Sort</a>
+                <a href="{% url 'resource_archive' pathway.id %}">Group</a>
             </div>
         </div>
     </div>
-    
-
-    <div>
-        <div class="p-4 bg-slate-200 rounded mt-4 text-black">
-            <button type="button" class="font-bold flex justify-between w-full" id="text-resource-button">
-                Text Resources ✍🏼
+{% for resource, type in resources_sorted %}
+    <div class="mb-4 rounded p-4 bg-slate-300">
+     
+        {% if type == "text" %}
+            <button type="button" class="font-medium toggle-sorted-text-resource flex justify-between w-full">
+                {{ resource.title }}
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 font-bold transform rotate-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
             </button>
+            <div class="hidden mt-4">{{ resource.content|safe }}</div> 
         
-            <div id="text-resource-content" class="mt-4"> 
-                {% for text_resource in pathway.text_resources.all %}
-                    <div class="mb-4 p-4 bg-slate-300 rounded">
-                        <button type="button" class="font-medium toggle-text-resource flex justify-between w-full">
-                            {{ text_resource.title }}
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 font-bold transform rotate-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                            </svg>
-                        </button>
-                        <div class="hidden mt-4">{{ text_resource.content|safe }}</div>
-                    </div>
-                {% endfor %}
-            </div>
-        </div>                
-        
-        <div class="p-4 bg-slate-200 rounded mt-4 text-black">
-            <button type="button" class="font-bold flex justify-between items-center w-full" id="image-resource-button">
-                Image Resources 🏞️
+        {% endif %}       
+        {% if type == "image" %}
+            <button type="button" class="font-medium toggle-sorted-image-resource flex justify-between w-full">
+                {{ resource.title }}
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 font-bold transform rotate-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
             </button>
-
-            <div id="image-resource-content" class="mt-4">
-                {% for image_resource in pathway.image_resources.all %}
-                    <div class="mb-4 bg-slate-300 rounded p-4">
-                        <button type="button" class="font-medium toggle-image-resource flex justify-between w-full">
-                            {{ image_resource.title }}
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 font-bold transform rotate-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                            </svg>
-                        </button>
-                        <img class="rounded mt-4 hidden" src="{{ image_resource.image.url }}" alt="{{ image_resource.title }}">
-                    </div>
-                {% endfor %}
-            </div>
-        </div>
-
-        <div class="p-4 bg-slate-200 rounded mt-4 text-black">
-            <button type="button" class="font-bold flex justify-between items-center w-full" id="file-resource-button">
-                File Resources 📑
+            <img class="rounded mt-4 hidden" src="{{ resource.image.url }}" alt="{{ resource.title }}">
+        {% endif %}
+        {% if type == "file" %}
+            <button type="button" class="font-medium toggle-sorted-file-resource flex justify-between w-full">
+                {{ resource.title }}
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 font-bold transform rotate-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
             </button>
-
-            <div id="file-resource-content" class="mt-4">
-                {% for file_resource in pathway.file_resources.all %}
-                    <div class="mb-4 rounded p-4 bg-slate-300">
-                        <button type="button" class="font-medium toggle-file-resource flex justify-between w-full">
-                            {{ file_resource.title }}
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 font-bold transform rotate-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                            </svg>
-                        </button>
-                        
-                        <div class="hidden mt-4"><a href="{{ file_resource.attachment.url }}" target="_blank">{{ file_resource.attachment.url }}</a></div>
-                    </div>
-                {% endfor %}
-            </div>
-        </div>
-
-        <div class="p-4 bg-slate-200 rounded mt-4 text-black">
-            <button type="button" class="font-bold flex justify-between items-center w-full" id="link-resource-button">
-                Link Resources 🔗
+            <div class="mt-4 hidden"><a href="{{ resource.attachment.url }}" target="_blank">{{ resource.attachment.url }}</a></div>
+        {% endif %}
+        {% if type == "link" %}
+            <button type="button" class="font-medium toggle-sorted-link-resource flex justify-between w-full">
+                {{ resource.title }}
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 font-bold transform rotate-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
             </button>
-
-            <div id="link-resource-content" class="mt-4">
-                {% for link_resource in pathway.link_resources.all %}
-                    <div class="mb-4 rounded p-4 bg-slate-300">
-                        <button type="button" class="font-medium toggle-link-resource flex justify-between w-full">
-                            {{ link_resource.title }}
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 font-bold transform rotate-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                            </svg>
-                        </button>
-                        
-                        <div class="truncate hidden mt-4"><a href="{{ link_resource.url }}" target="_blank">{{ link_resource.url }}</a></div>
-                    </div>
-                {% endfor %}
-            </div>
-        </div>
-        
+            <div class="truncate mt-4 hidden"><a href="{{ resource.url }}" target="_blank">{{ resource.url }}</a></div>
+        {% endif %}
     </div>
+{% endfor %}
+
+<script>
+    document.querySelectorAll('.toggle-sorted-text-resource').forEach(button => {
+        button.addEventListener('click', () => {
+            const resourceContent = button.nextElementSibling;
+            resourceContent.classList.toggle('hidden');
+        });
+    });
+
+    document.querySelectorAll('.toggle-sorted-image-resource').forEach(button => {
+        button.addEventListener('click', () => {
+            const resourceContent = button.nextElementSibling;
+            resourceContent.classList.toggle('hidden');
+        });
+    });
+
+    document.querySelectorAll('.toggle-sorted-file-resource').forEach(button => {
+        button.addEventListener('click', () => {
+            const resourceContent = button.nextElementSibling;
+            resourceContent.classList.toggle('hidden');
+        });
+    });
+
+    document.querySelectorAll('.toggle-sorted-link-resource').forEach(button => {
+        button.addEventListener('click', () => {
+            const resourceContent = button.nextElementSibling;
+            resourceContent.classList.toggle('hidden');
+        });
+    });
+</script>
 
 {% endblock %}
