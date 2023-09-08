@@ -7,10 +7,10 @@
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     </head>
 <!-- templates/shared/header.html -->
-<header class="text-black bg-slate-200 rounded m-4 font-mono">
-    <div class="flex justify-between content-center py-2 mx-4">
-        <div class="text-lg uppercase font-bold pt-1">Pathways🚦</div>
-        <div class="absolute inset-x-0 top-y-0 flex items-center justify-center pt-1 z-10">
+<header class="text-black bg-slate-200 rounded m-4 font-sans">
+    <div class="flex justify-between items-center py-2 mx-4">
+        <div class="text-lg uppercase font-bold">Pathways🚦</div>
+        <div class="absolute inset-x-0 top-y-0 flex items-center justify-center z-10">
             <div>{{ user.username }}</div>
         </div>
         {% if not user.is_authenticated %}
@@ -38,7 +38,7 @@
 
     </div>
 </header>
-<body class="font-mono bg-slate-50">
+<body class="font-sans bg-slate-50">
     {% block content %}
     {% endblock %}
 </body>
