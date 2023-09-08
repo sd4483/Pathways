@@ -138,9 +138,20 @@
                     </svg>
                 </div>
             </button>
-            <div class="hidden mt-4">{{ resource.content|safe }}</div> 
-        
-        {% endif %}       
+            <div class="hidden mt-4">
+                {{ resource.content|safe }}
+                {% if resource.created_by == request.user %}
+                    <div class="flex justify-between">
+                        <div class="pseudo-element"></div>
+                        <form action="{% url 'delete_text_resource' pathway.id resource.id %}" method="post" onsubmit="return confirm('Are you sure you want to delete this resource?');">
+                            {% csrf_token %}
+                            <button type="submit" class="my-2 rounded px-2 py-1 bg-red-500 text-white">Delete</button>
+                        </form>
+                    </div>
+                {% endif %} 
+            </div>
+        {% endif %} 
+
         {% if type == "image" %}
             <button type="button" class="font-semibold toggle-sorted-image-resource flex justify-between w-full">
                 {{ resource.title }}
@@ -151,8 +162,20 @@
                     </svg>
                 </div>
             </button>
-            <img class="rounded mt-4 hidden" src="{{ resource.image.url }}" alt="{{ resource.title }}">
+            <div class="hidden mt-4">
+                <img class="rounded" src="{{ resource.image.url }}" alt="{{ resource.title }}">
+                {% if resource.created_by == request.user %}
+                    <div class="flex justify-between">
+                        <div class="pseudo-element"></div>
+                        <form action="{% url 'delete_image_resource' pathway.id resource.id %}" method="post" onsubmit="return confirm('Are you sure you want to delete this resource?');">
+                            {% csrf_token %}
+                            <button type="submit" class="my-2 rounded px-2 py-1 bg-red-500 text-white">Delete</button>
+                        </form>
+                    </div>
+                {% endif %} 
+            </div>
         {% endif %}
+
         {% if type == "file" %}
             <button type="button" class="font-semibold toggle-sorted-file-resource flex justify-between w-full">
                 {{ resource.title }}
@@ -163,8 +186,20 @@
                     </svg>
                 </div>
             </button>
-            <div class="mt-4 hidden"><a href="{{ resource.attachment.url }}" target="_blank">{{ resource.attachment.url }}</a></div>
+            <div class="mt-4 hidden">
+                <a href="{{ resource.attachment.url }}" target="_blank">{{ resource.attachment.url }}</a>
+                {% if resource.created_by == request.user %}
+                    <div class="flex justify-between">
+                        <div class="pseudo-element"></div>
+                        <form action="{% url 'delete_file_resource' pathway.id resource.id %}" method="post" onsubmit="return confirm('Are you sure you want to delete this resource?');">
+                            {% csrf_token %}
+                            <button type="submit" class="my-2 rounded px-2 py-1 bg-red-500 text-white">Delete</button>
+                        </form>
+                    </div>
+                {% endif %}
+            </div>
         {% endif %}
+
         {% if type == "link" %}
             <button type="button" class="font-semibold toggle-sorted-link-resource flex justify-between w-full">
                 {{ resource.title }}
@@ -175,7 +210,18 @@
                     </svg>
                 </div>
             </button>
-            <div class="truncate mt-4 hidden"><a href="{{ resource.url }}" target="_blank">{{ resource.url }}</a></div>
+            <div class="truncate mt-4 hidden">
+                <a href="{{ resource.url }}" target="_blank">{{ resource.url }}</a>
+                {% if resource.created_by == request.user %}
+                    <div class="flex justify-between">
+                        <div class="pseudo-element"></div>
+                        <form action="{% url 'delete_link_resource' pathway.id resource.id %}" method="post" onsubmit="return confirm('Are you sure you want to delete this resource?');">
+                            {% csrf_token %}
+                            <button type="submit" class="my-2 rounded px-2 py-1 bg-red-500 text-white">Delete</button>
+                        </form>
+                    </div>
+                {% endif %}
+            </div>
         {% endif %}
     </div>
 {% endfor %}

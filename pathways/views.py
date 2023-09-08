@@ -5,6 +5,7 @@ from .forms import PathwayForm, LinkResourceForm, FileResourceForm, TextResource
 from .models import Pathway, Comment, Reply, FollowedPathway
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.urls import reverse
 
 def view_pathway_view(request):
     followed_pathways = []
@@ -33,8 +34,8 @@ def create_pathway_view(request):
     if request.method == 'POST':
         form = PathwayForm(request.POST)
         if form.is_valid():
-            pathway = form.save(commit=False)  # Temporarily save form but don't commit to database yet
-            pathway.user = request.user  # Attach the current user to the pathway
+            pathway = form.save(commit=False) 
+            pathway.user = request.user  
             pathway.save()
             return redirect('view_pathway')
     else:
@@ -68,13 +69,15 @@ def upvote_pathway_view(request, pathway_id):
     pathway = get_object_or_404(Pathway, id=pathway_id)
     pathway.upvotes += 1
     pathway.save()
-    return redirect('resource_archive', pathway_id=pathway_id)
+    referer_url = request.META.get('HTTP_REFERER', reverse('resource_archive', args=[pathway_id]))
+    return redirect(referer_url)
 
 def downvote_pathway_view(request, pathway_id):
     pathway = get_object_or_404(Pathway, id=pathway_id)
     pathway.downvotes += 1
     pathway.save()
-    return redirect('resource_archive', pathway_id=pathway_id)
+    referer_url = request.META.get('HTTP_REFERER', reverse('resource_archive', args=[pathway_id]))
+    return redirect(referer_url)
 
 def pathway_comments_view(request, pathway_id):
     pathway = get_object_or_404(Pathway, id=pathway_id)

@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponseForbidden
+from django.core.exceptions import PermissionDenied
 from .forms import LinkResourceForm, FileResourceForm, TextResourceForm, ImageResourceForm
-from .models import Pathway
+from .models import Pathway, TextResource, LinkResource, ImageResource, FileResource
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.urls import reverse
 
 def resource_archive_view(request, pathway_id):
     pathway = get_object_or_404(Pathway, pk=pathway_id)
@@ -59,6 +61,7 @@ def resource_sorted_view(request, pathway_id):
     }
     return render(request, 'pathways/resource_sorted_template.html', context)
 
+
 def text_resource_view(request, pathway_id):
     pathway = get_object_or_404(Pathway, pk=pathway_id)
     text_resource_form = TextResourceForm(request.POST or None, prefix='text_resource')
@@ -68,10 +71,25 @@ def text_resource_view(request, pathway_id):
             if text_resource_form.is_valid():
                 text_resource = text_resource_form.save(commit=False)
                 text_resource.pathway = pathway
+                text_resource.created_by = request.user
                 text_resource.save()
-                return redirect('resource_archive', pathway_id=pathway_id)
+                referer_url = request.META.get('HTTP_REFERER', reverse('resource_sorted', args=[pathway_id]))
+                return redirect(referer_url)
     
     return render(request, 'pathways/resource_archive_template.html', {'pathway':pathway, 'text_resource_form':text_resource_form})
+
+
+def text_resource_delete_view(request, pathway_id, resource_id):
+    text_resource = get_object_or_404(TextResource, pk=resource_id)
+
+    if request.user != text_resource.created_by:
+        raise PermissionDenied
+
+    if request.method == "POST":
+        text_resource.delete()
+        referer_url = request.META.get('HTTP_REFERER', reverse('resource_sorted', args=[pathway_id]))
+        return redirect(referer_url)
+
 
 def link_resource_view(request, pathway_id):
     pathway = get_object_or_404(Pathway, pk=pathway_id)
@@ -81,13 +99,25 @@ def link_resource_view(request, pathway_id):
         if link_resource_form.is_valid():
             link_resource = link_resource_form.save(commit=False)
             link_resource.pathway = pathway
+            link_resource.created_by = request.user
             link_resource.save()
-            return redirect('resource_archive', pathway_id=pathway_id)
+            referer_url = request.META.get('HTTP_REFERER', reverse('resource_sorted', args=[pathway_id]))
+            return redirect(referer_url)
     else:
         link_resource_form = LinkResourceForm()
     
     return render(request, 'pathways/resource_archive_template.html', {'pathway':pathway, 'link_resource_form':link_resource_form})
 
+def link_resource_delete_view(request, pathway_id, resource_id):
+    link_resource = get_object_or_404(LinkResource, pk=resource_id)
+
+    if request.user != link_resource.created_by:
+        raise PermissionDenied
+
+    if request.method == "POST":
+        link_resource.delete()
+        referer_url = request.META.get('HTTP_REFERER', reverse('resource_sorted', args=[pathway_id]))
+        return redirect(referer_url)
 
 def image_resource_view(request, pathway_id):
     pathway = get_object_or_404(Pathway, pk=pathway_id)
@@ -98,10 +128,23 @@ def image_resource_view(request, pathway_id):
             if image_resource_form.is_valid():
                 image_resource = image_resource_form.save(commit=False)
                 image_resource.pathway = pathway
+                image_resource.created_by = request.user
                 image_resource.save()
-                return redirect('resource_archive', pathway_id=pathway_id)
+                referer_url = request.META.get('HTTP_REFERER', reverse('resource_sorted', args=[pathway_id]))
+                return redirect(referer_url)
     
     return render(request, 'pathways/resource_archive_template.html', {'pathway':pathway, 'image_resource_form':image_resource_form})
+
+def image_resource_delete_view(request, pathway_id, resource_id):
+    image_resource = get_object_or_404(ImageResource, pk=resource_id)
+
+    if request.user != image_resource.created_by:
+        raise PermissionDenied
+
+    if request.method == "POST":
+        image_resource.delete()
+        referer_url = request.META.get('HTTP_REFERER', reverse('resource_sorted', args=[pathway_id]))
+        return redirect(referer_url)
 
 def file_resource_view(request, pathway_id):
     pathway = get_object_or_404(Pathway, pk=pathway_id)
@@ -111,9 +154,22 @@ def file_resource_view(request, pathway_id):
         if file_resource_form.is_valid():
             file_resource = file_resource_form.save(commit=False)
             file_resource.pathway = pathway
+            file_resource.created_by = request.user
             file_resource.save()
-            return redirect('resource_archive', pathway_id=pathway_id)
+            referer_url = request.META.get('HTTP_REFERER', reverse('resource_sorted', args=[pathway_id]))
+            return redirect(referer_url)
     else:
         file_resource_form = FileResourceForm()
         
     return render(request, 'pathways/resource_archive_template.html', {'pathway':pathway, 'file_resource_form':file_resource_form})
+
+def file_resource_delete_view(request, pathway_id, resource_id):
+    file_resource = get_object_or_404(FileResource, pk=resource_id)
+
+    if request.user != file_resource.created_by:
+        raise PermissionDenied
+
+    if request.method == "POST":
+        file_resource.delete()
+        referer_url = request.META.get('HTTP_REFERER', reverse('resource_sorted', args=[pathway_id]))
+        return redirect(referer_url)

@@ -46,6 +46,7 @@ class ImageResource(models.Model):
     title = models.CharField(max_length=200)
     notes = models.TextField()
     image = models.ImageField(upload_to='resources/')
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 
 class LinkResource(models.Model):
@@ -53,12 +54,14 @@ class LinkResource(models.Model):
     title = models.CharField(max_length=200)
     notes = models.TextField()
     url = models.URLField()
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 
 class TextResource(models.Model):
     pathway = models.ForeignKey(Pathway, on_delete=models.CASCADE, related_name="text_resources")
     title = models.CharField(max_length=200)
     content = HTMLField()
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 
 class FileResource(models.Model):
@@ -66,6 +69,7 @@ class FileResource(models.Model):
     title = models.CharField(max_length=200)
     notes = models.TextField()
     attachment = models.FileField(upload_to='files/')
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 
 class StudyTask(models.Model):

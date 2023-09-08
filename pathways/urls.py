@@ -1,7 +1,7 @@
 from django.urls import path, include
 from . import views
 from .plan_revise_view import planning_view, complete_task_view, revision_view, mark_revision_completed
-from .resources_view import resource_archive_view, image_resource_view, text_resource_view, link_resource_view, file_resource_view, resource_sorted_view
+from .resources_view import resource_archive_view, image_resource_view, text_resource_view, link_resource_view, file_resource_view, resource_sorted_view, text_resource_delete_view, image_resource_delete_view, link_resource_delete_view, file_resource_delete_view
 
 urlpatterns = [
     path('', views.view_pathway_view, name='view_pathway'),
@@ -19,6 +19,10 @@ urlpatterns = [
     path('pathway/<int:pathway_id>/add-link', link_resource_view, name='link_resource'),
     path('pathway/<int:pathway_id>/add-image', image_resource_view, name='image_resource'),
     path('pathway/<int:pathway_id>/add-file', file_resource_view, name='file_resource'),
+    path('<int:pathway_id>/text-resource/<int:resource_id>/delete/', text_resource_delete_view, name='delete_text_resource'),
+    path('<int:pathway_id>/image-resource/<int:resource_id>/delete/', image_resource_delete_view, name='delete_image_resource'),
+    path('<int:pathway_id>/link-resource/<int:resource_id>/delete/', link_resource_delete_view, name='delete_link_resource'),
+    path('<int:pathway_id>/file-resource/<int:resource_id>/delete/', file_resource_delete_view, name='delete_file_resource'),
     path('delete_pathway/<int:pathway_id>/', views.delete_pathway_view, name='delete_pathway'),
     path('pathway/<int:pathway_id>/planning/', planning_view, name='planning'),
     path('pathway/<int:pathway_id>/revision/', revision_view, name='revision'),
