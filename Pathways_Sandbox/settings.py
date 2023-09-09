@@ -46,7 +46,6 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "pathways",
     "users",
-    "tinymce",
 ]
 
 MIDDLEWARE = [
