@@ -54,6 +54,9 @@ class LinkResource(models.Model):
     title = models.CharField(max_length=200)
     notes = models.TextField()
     url = models.URLField()
+    fetched_title = models.CharField(max_length=512, blank=True, null=True)
+    fetched_image_url = models.URLField(blank=True, null=True)
+    fetched_domain = models.URLField(blank=True, null=True)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 

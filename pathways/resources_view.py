@@ -6,6 +6,9 @@ from .models import Pathway, TextResource, LinkResource, ImageResource, FileReso
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.urls import reverse
+import requests
+from urllib.parse import urlparse
+from bs4 import BeautifulSoup
 
 def resource_archive_view(request, pathway_id):
     pathway = get_object_or_404(Pathway, pk=pathway_id)
@@ -100,7 +103,15 @@ def link_resource_view(request, pathway_id):
             link_resource = link_resource_form.save(commit=False)
             link_resource.pathway = pathway
             link_resource.created_by = request.user
+            
+            title, image = fetch_title_and_image(link_resource.url) 
+            link_resource.fetched_title = title
+            link_resource.fetched_image_url = image
+            domain = extract_domain(link_resource.url)
+            link_resource.fetched_domain = domain
+            
             link_resource.save()
+
             referer_url = request.META.get('HTTP_REFERER', reverse('resource_sorted', args=[pathway_id]))
             return redirect(referer_url)
     else:
@@ -173,3 +184,35 @@ def file_resource_delete_view(request, pathway_id, resource_id):
         file_resource.delete()
         referer_url = request.META.get('HTTP_REFERER', reverse('resource_sorted', args=[pathway_id]))
         return redirect(referer_url)
+    
+
+def fetch_title_and_image(url):
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'}
+    try:
+        response = requests.get(url, headers=headers, timeout=10)
+        response.raise_for_status()  # Raise an error for bad responses
+        
+        soup = BeautifulSoup(response.content, 'html.parser')
+
+        title = soup.title.string if soup.title else None
+
+        og_title = soup.find('meta', attrs={"property": "og:title"})
+        if og_title and og_title.attrs.get("content"):
+            title = og_title.attrs["content"]
+
+        image = None
+        og_image = soup.find('meta', attrs={"property": "og:image"})
+        if og_image and og_image.attrs.get("content"):
+            image = og_image.attrs["content"]
+
+        return title, image
+
+    except requests.RequestException as e:
+        print(f"Error fetching data from URL: {e}")
+        return None, None
+
+def extract_domain(url):
+    parsed_uri = urlparse(url)
+    domain = '{uri.netloc}'.format(uri=parsed_uri).replace("www.", "")  # remove 'www.' if it exists
+    return domain
