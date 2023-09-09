@@ -119,6 +119,7 @@ class Revision(models.Model):
     pathway = models.ForeignKey(Pathway, on_delete=models.CASCADE, related_name="revisions")
     revision_type = models.CharField(max_length=10, choices=REVISION_TYPE)
     status = models.CharField(max_length=10, choices=REVISION_STATUS, default=PENDING)
+    created_date = models.DateField(auto_now_add=True)
     due_date = models.DateField()
 
     @property
@@ -129,6 +130,37 @@ class Revision(models.Model):
             self.THIRD: 75,
             self.FOURTH: 100
         }.get(self.revision_type, 0)
+    
+    @property
+    def days_since_created(self):
+        return (date.today() - self.created_date).days
+
+    @property
+    def retention_rate(self):
+        if self.days_since_created == 0:
+            return 100
+
+        if self.days_since_created == 1:
+            if self.revision_type == self.FIRST:
+                return 85
+            return 70
+
+        if self.days_since_created <= 7:
+            if self.revision_type == self.SECOND:
+                return 60
+            return 40
+
+        if self.days_since_created <= 16:
+            if self.revision_type == self.THIRD:
+                return 40
+            return 20
+
+        if self.days_since_created <= 30:
+            if self.revision_type == self.FOURTH:
+                return 25
+            return 10
+
+        return 0
     
 class FollowedPathway(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

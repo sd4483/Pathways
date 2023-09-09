@@ -1,6 +1,10 @@
 {% extends 'pathways/single_pathway_template.html' %}
 
 {% block pathway_content %}
+
+{% load tz %}
+{% now "Y-m-d" as now %}
+
 <div class="text-xl pb-2 font-bold">Planning for {{ pathway.title }}</div>
 
 {% if user.is_authenticated %}
@@ -27,7 +31,11 @@
                 <div class="flex justify-between gap-4 items-center my-2">
                     <div class="flex justify-between items-center bg-slate-300 rounded p-2 w-full">
                         <span>{{ task.title }}</span>
-                        <span class="text-gray-700 text-sm">Due by {{ task.due_date }}</span>
+                        {% if task.due_date|date:"Y-m-d" < now %}
+                            <span class="text-red-600 text-sm">Due by {{ task.due_date }}</span>
+                        {% else %}
+                            <span class="text-gray-700 text-sm">Due by {{ task.due_date }}</span>
+                        {% endif %}
                     </div>
                     <form method="post" action="{% url 'complete_task' pathway.id task.id %}">
                         {% csrf_token %}

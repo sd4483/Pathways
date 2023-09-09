@@ -74,7 +74,16 @@ def revision_view(request, pathway_id):
     else:
         user_revisions = []
         completed_revisions = []
-    return render(request, 'pathways/revision_template.html', {'revisions': user_revisions, 'completed_revisions': completed_revisions, 'pathway':pathway, 'error_message': error_message, 'is_user_following': is_user_following,})
+
+    total_retention = sum(revision.retention_rate for revision in user_revisions)
+    average_retention = total_retention / len(user_revisions) if user_revisions else 0
+
+    return render(request, 'pathways/revision_template.html', 
+                  {'revisions': user_revisions, 
+                   'completed_revisions': completed_revisions, 
+                   'pathway':pathway, 'error_message': error_message, 
+                   'is_user_following': is_user_following, 
+                   'average_retention': average_retention})
 
 def mark_revision_completed(request, revision_id):
     revision = get_object_or_404(Revision, id=revision_id)

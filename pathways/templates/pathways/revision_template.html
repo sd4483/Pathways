@@ -2,6 +2,8 @@
 
 {% block pathway_content %}
 
+{% load tz %}
+{% now "Y-m-d" as now %}
 <div class="text-xl pb-2 font-bold">Revision for {{ pathway.title }}</div>
 
 {% if user.is_authenticated %}
@@ -15,7 +17,12 @@
                         <div class="flex justify-between gap-4 items-center my-2">
                             <div class="flex justify-between items-center bg-slate-300 rounded p-2 w-full">
                                 <span>{{ revision.study_task.title }}</span>
-                                <span class="text-gray-700 text-sm">{{ revision.due_date }}</span>
+                                {% if revision.due_date|date:"Y-m-d" < now %}
+                                    <span class="text-red-600 text-sm">{{ revision.due_date }}</span>
+                                {% else %}
+                                    <span class="text-gray-700 text-sm">{{ revision.due_date }}</span>
+                                {% endif %}
+                                {{ revision.retention_rate }}
                             </div>
                             <button onclick="location.href='{% url 'mark_revision_completed' revision.id %}'" class="text-white bg-green-600 hover:bg-green-700 rounded px-4 py-2">
                                 ✓
@@ -33,7 +40,12 @@
                         <div class="flex justify-between gap-4 items-center my-2">
                             <div class="flex justify-between items-center bg-slate-300 rounded p-2 w-full">
                                 <span>{{ revision.study_task.title }}</span>
-                                <span class="text-gray-700 text-sm">{{ revision.due_date }}</span>
+                                {% if revision.due_date|date:"Y-m-d" < now %}
+                                    <span class="text-red-600 text-sm">{{ revision.due_date }}</span>
+                                {% else %}
+                                    <span class="text-gray-700 text-sm">{{ revision.due_date }}</span>
+                                {% endif %}
+                                {{ revision.retention_rate }}
                             </div>
                             <button onclick="location.href='{% url 'mark_revision_completed' revision.id %}'" class="text-white bg-green-600 hover:bg-green-700 rounded px-4 py-2">
                                 ✓
@@ -51,7 +63,12 @@
                         <div class="flex justify-between gap-4 items-center my-2">
                             <div class="flex justify-between items-center bg-slate-300 rounded p-2 w-full">
                                 <span>{{ revision.study_task.title }}</span>
-                                <span class="text-gray-700 text-sm">{{ revision.due_date }}</span>
+                                {% if revision.due_date|date:"Y-m-d" < now %}
+                                    <span class="text-red-600 text-sm">{{ revision.due_date }}</span>
+                                {% else %}
+                                    <span class="text-gray-700 text-sm">{{ revision.due_date }}</span>
+                                {% endif %}
+                                {{ revision.retention_rate }}
                             </div>
                             <button onclick="location.href='{% url 'mark_revision_completed' revision.id %}'" class="text-white bg-green-600 hover:bg-green-700 rounded px-4 py-2">
                                 ✓
@@ -69,7 +86,12 @@
                         <div class="flex justify-between gap-4 items-center my-2">
                             <div class="flex justify-between items-center bg-slate-300 rounded p-2 w-full">
                                 <span>{{ revision.study_task.title }}</span>
-                                <span class="text-gray-700 text-sm">{{ revision.due_date }}</span>
+                                {% if revision.due_date|date:"Y-m-d" < now %}
+                                    <span class="text-red-600 text-sm">{{ revision.due_date }}</span>
+                                {% else %}
+                                    <span class="text-gray-700 text-sm">{{ revision.due_date }}</span>
+                                {% endif %}
+                                {{ revision.retention_rate }}
                             </div>
                             <button onclick="location.href='{% url 'mark_revision_completed' revision.id %}'" class="text-white bg-green-600 hover:bg-green-700 rounded px-4 py-2">
                                 ✓
@@ -81,7 +103,7 @@
         </div>
 
         <!-- Completed Tasks List -->
-        <div class="bg-slate-200 p-4 rounded">
+        <div class="bg-slate-200 p-4 rounded mb-10">
             <h3 class="mb-4 font-bold">Completed Revisions</h3>
             {% for revision in completed_revisions %}
                 {% if revision.status == 'completed' %}
@@ -90,6 +112,11 @@
                     </div>
                 {% endif %}
             {% endfor %}
+        </div>
+
+        <div class="bg-slate-200 p-4 rounded">
+            <div class="mb-4 font-bold">Stats</div>
+            Average retention rate per task = {{ average_retention }}
         </div>
     {% endif %}
 
