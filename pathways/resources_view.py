@@ -164,6 +164,7 @@ def file_resource_view(request, pathway_id):
         file_resource_form = FileResourceForm(request.POST or None, request.FILES or None)
         if file_resource_form.is_valid():
             file_resource = file_resource_form.save(commit=False)
+            file_resource.name = file_resource.attachment.name
             file_resource.pathway = pathway
             file_resource.created_by = request.user
             file_resource.save()
@@ -171,8 +172,8 @@ def file_resource_view(request, pathway_id):
             return redirect(referer_url)
     else:
         file_resource_form = FileResourceForm()
-        
-    return render(request, 'pathways/resource_archive_template.html', {'pathway':pathway, 'file_resource_form':file_resource_form})
+    
+    return render(request, 'pathways/resource_archive_template.html', {'pathway':pathway, 'file_resource_form':file_resource_form, 'file_name':file_name})
 
 def file_resource_delete_view(request, pathway_id, resource_id):
     file_resource = get_object_or_404(FileResource, pk=resource_id)

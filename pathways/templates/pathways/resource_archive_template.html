@@ -132,9 +132,7 @@
         <div class="p-4 bg-slate-200 rounded mt-4 text-black">
             <button type="button" class="font-bold flex justify-between w-full" id="text-resource-button">
                 Text Resources ✍🏼
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 font-bold transform rotate-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
+                <div class="font-normal text-gray-700">↓</div>
             </button>
         
             <div id="text-resource-content" class="mt-4"> 
@@ -142,9 +140,7 @@
                     <div class="mb-4 p-4 bg-slate-300 rounded">
                         <button type="button" class="font-medium toggle-text-resource flex justify-between w-full">
                             {{ text_resource.title }}
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 font-bold transform rotate-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                            </svg>
+                            <div class="font-normal text-gray-700">↓</div>
                         </button>
                         <div class="hidden mt-4">
                             {{ text_resource.content|safe }}
@@ -166,9 +162,7 @@
         <div class="p-4 bg-slate-200 rounded mt-4 text-black">
             <button type="button" class="font-bold flex justify-between items-center w-full" id="image-resource-button">
                 Image Resources 🏞️
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 font-bold transform rotate-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
+                <div class="font-normal text-gray-700">↓</div>
             </button>
 
             <div id="image-resource-content" class="mt-4">
@@ -176,9 +170,7 @@
                     <div class="mb-4 bg-slate-300 rounded p-4">
                         <button type="button" class="font-medium toggle-image-resource flex justify-between w-full">
                             {{ image_resource.title }}
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 font-bold transform rotate-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                            </svg>
+                            <div class="font-normal text-gray-700">↓</div>
                         </button>
                         <div class="hidden mt-4">
                             <img class="rounded" src="{{ image_resource.image.url }}" alt="{{ image_resource.title }}">
@@ -200,9 +192,7 @@
         <div class="p-4 bg-slate-200 rounded mt-4 text-black">
             <button type="button" class="font-bold flex justify-between items-center w-full" id="file-resource-button">
                 File Resources 📑
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 font-bold transform rotate-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
+                <div class="font-normal text-gray-700">↓</div>
             </button>
 
             <div id="file-resource-content" class="mt-4">
@@ -210,13 +200,11 @@
                     <div class="mb-4 rounded p-4 bg-slate-300">
                         <button type="button" class="font-medium toggle-file-resource flex justify-between w-full">
                             {{ file_resource.title }}
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 font-bold transform rotate-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                            </svg>
+                            <div class="font-normal text-gray-700">↓</div>
                         </button>
                         
                         <div class="hidden mt-4">
-                            <a href="{{ file_resource.attachment.url }}" target="_blank">{{ file_resource.attachment.url }}</a>
+                            <a href="{{ file_resource.attachment.url }}" target="_blank" class="underline">{{ file_resource.name }}</a>
                             {% if file_resource.created_by == request.user %}
                                 <div class="flex justify-between">
                                     <div class="pseudo-element"></div>
@@ -235,9 +223,7 @@
         <div class="p-4 bg-slate-200 rounded mt-4 text-black">
             <button type="button" class="font-bold flex justify-between items-center w-full" id="link-resource-button">
                 Link Resources 🔗
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 font-bold transform rotate-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
+                <div class="font-normal text-gray-700">↓</div>
             </button>
 
             <div id="link-resource-content" class="mt-4">
@@ -245,9 +231,7 @@
                     <div class="mb-4 rounded p-4 bg-slate-300">
                         <button type="button" class="font-medium toggle-link-resource flex justify-between w-full">
                             {{ link_resource.title }}
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 font-bold transform rotate-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                            </svg>
+                            <div class="font-normal text-gray-700">↓</div>
                         </button>
                         
                         <div class="truncate hidden mt-4">
@@ -272,11 +256,7 @@
                                         </form>
                                     </div>
                                 {% endif %}
-                            </div>
-
-                            <!-- <a href="{{ link_resource.url }}" target="_blank">{{ link_resource.url }}</a> -->
-                            
-                            
+                            </div>                            
                             
                         </div>
                     </div>
