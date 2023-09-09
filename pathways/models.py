@@ -95,7 +95,8 @@ class FileResource(models.Model):
 
                 uploaded_file = cloudinary.uploader.upload(
                     self.attachment.file,
-                    resource_type=resource_type
+                    resource_type=resource_type,
+                    public_id=self.attachment.name.rsplit('.', 1)[0] 
                 )
                 
                 self.cloudinary_url = uploaded_file['url']
