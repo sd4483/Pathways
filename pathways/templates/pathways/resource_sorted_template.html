@@ -190,7 +190,7 @@
 
                     <div class="text-gray-800">
                         <div class="mb-4">{{ resource.notes }}</div>
-                        <a href="{% if resource.cloudinary_url %}{{ resource.cloudinary_url }}{% else %}{{ resource.attachment.url }}{% endif %}" target="_blank" class="underline">{{ resource.name }}</a>
+                        <a href="{{ resource.attachment.url }}" target="_blank" class="underline">{{ resource.name }}</a>
                         {% if resource.created_by == request.user %}
                             <div class="flex justify-between mt-2">
                                 <div class="pseudo-element"></div>
