@@ -8,7 +8,40 @@
     </head>
 <!-- templates/shared/header.html -->
 <header class="text-black bg-slate-200 rounded m-4 font-sans">
-    <div class="flex justify-between items-center py-2 mx-4">
+    <div class="grid grid-cols-3 items-center py-2 mx-4">
+        <div class="text-lg uppercase font-bold justify-self-start">Pathways🚦</div>
+        
+        <div class="justify-self-center">{{ user.username }}</div>
+
+        <div class="justify-self-end">
+        {% if not user.is_authenticated %}
+        <div class="flex gap-4 justify-between text-base font-medium z-20 my-1">
+            <div>
+                <a href="{% url 'view_pathway'%}" class="rounded p-2 bg-slate-300">View Pathways</a>
+            </div>
+            <div>
+                <a href="{% url 'register' %}" class="rounded p-2 bg-slate-300">Register</a>
+            </div>
+            <div>
+                <a href="{% url 'login' %}" class="p-2 bg-blue-600 hover:bg-blue-700 rounded text-white">Login</a>
+            </div>
+        </div>
+        {% else %}
+        <div class="flex gap-6 justify-between text-base font-medium z-20 my-1">
+            <div>
+                <a href="{% url 'view_pathway'%}" class="rounded p-2 bg-slate-300">View Pathways</a>
+            </div>
+            <div>
+                <a href="{% url 'logout' %}" class="rounded p-2 bg-slate-300">Logout</a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</header>
+
+<!-- <div class="text-black bg-slate-200 rounded m-4 font-sans">
+    
+ <div class="flex justify-between items-center py-2 mx-4">
         <div class="text-lg uppercase font-bold">Pathways🚦</div>
         <div class="absolute inset-x-0 top-y-0 flex items-center justify-center z-10">
             <div>{{ user.username }}</div>
@@ -37,7 +70,8 @@
         {% endif %}
 
     </div>
-</header>
+</div> -->
+
 <body class="font-sans bg-slate-50">
     {% block content %}
     {% endblock %}

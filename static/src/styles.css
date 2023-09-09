@@ -705,8 +705,16 @@ video {
   grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
 }
 
+.grid-cols-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+}
+
 .flex-col {
   flex-direction: column !important;
+}
+
+.content-center {
+  align-content: center !important;
 }
 
 .items-center {
@@ -748,6 +756,14 @@ video {
 .divide-slate-800 > :not([hidden]) ~ :not([hidden]) {
   --tw-divide-opacity: 1 !important;
   border-color: rgb(30 41 59 / var(--tw-divide-opacity)) !important;
+}
+
+.justify-self-start {
+  justify-self: start !important;
+}
+
+.justify-self-end {
+  justify-self: end !important;
 }
 
 .justify-self-center {
