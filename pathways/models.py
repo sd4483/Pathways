@@ -4,6 +4,7 @@ from tinymce.models import HTMLField
 from datetime import date, timedelta
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+import os, cloudinary.uploader
 
 # Create your models here.
 
@@ -75,6 +76,32 @@ class FileResource(models.Model):
     name = models.CharField(max_length=300)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    cloudinary_url = models.URLField(blank=True, null=True)
+
+    def save(self, *args, **kwargs):
+        if 'DYNO' in os.environ:
+            if self.attachment and (not self.cloudinary_url or self.attachment.name != self.name):
+                ext = self.attachment.name.split('.')[-1].lower()
+                image_types = ['jpg', 'jpeg', 'png', 'gif']
+                raw_types = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'csv']
+
+                if ext in image_types:
+                    resource_type = 'image'
+                elif ext in raw_types:
+                    resource_type = 'raw'
+                else:
+                    resource_type = 'raw'
+
+                uploaded_file = cloudinary.uploader.upload(
+                    self.attachment.file,
+                    resource_type=resource_type
+                )
+                
+                self.cloudinary_url = uploaded_file['url']
+                self.name = self.attachment.name
+
+        super().save(*args, **kwargs)
 
 class StudyTask(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

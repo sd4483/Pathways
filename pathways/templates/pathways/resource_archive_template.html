@@ -212,7 +212,7 @@
                             
                             <div class="text-gray-800">
                                 <div class="mb-4">{{ file_resource.notes }}</div>
-                                <a href="{{ file_resource.attachment.url }}" target="_blank" class="underline">{{ file_resource.name }}</a>
+                                <a href="{{ file_resource.cloudinary_url }}" target="_blank" class="underline">{{ file_resource.name }}</a>
                                 {% if file_resource.created_by == request.user %}
                                     <div class="flex justify-between mt-2">
                                         <div class="pseudo-element"></div>
