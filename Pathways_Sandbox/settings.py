@@ -85,19 +85,15 @@ WSGI_APPLICATION = "Pathways_Sandbox.wsgi.application"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'Pathways_Sandbox',
+        'USER': 'postgres',
+        'PASSWORD': 'symbian',
+        'HOST': 'localhost',
+        'PORT': '5433',
+    }
 }
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': 'Pathways_Sandbox',
-#         'USER': 'postgres',
-#         'PASSWORD': 'symbian',
-#         'HOST': 'localhost',
-#         'PORT': '5433',
-#     }
-# }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -146,6 +142,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 if 'DYNO' in os.environ:
     DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
     STATICFILES_STORAGE = 'cloudinary_storage.storage.StaticCloudinaryStorage'
+    DATABASES = {
+        'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))
+    }
 
 
 # Default primary key field type
