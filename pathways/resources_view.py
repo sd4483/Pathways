@@ -173,7 +173,7 @@ def file_resource_view(request, pathway_id):
     else:
         file_resource_form = FileResourceForm()
     
-    return render(request, 'pathways/resource_archive_template.html', {'pathway':pathway, 'file_resource_form':file_resource_form, 'file_name':file_name})
+    return render(request, 'pathways/resource_archive_template.html', {'pathway':pathway, 'file_resource_form':file_resource_form})
 
 def file_resource_delete_view(request, pathway_id, resource_id):
     file_resource = get_object_or_404(FileResource, pk=resource_id)
