@@ -1,0 +1,24 @@
+{% extends 'pathways/single_pathway_template.html' %}
+
+{% block pathway_content %}
+
+{% load tz %}
+{% now "Y-m-d" as now %}
+
+    <h2>Task Details</h2>
+
+    <p><strong>Title:</strong> {{ task.title }}</p>
+    <p><strong>Task Creation Date:</strong> {{ task.created_at|date:"F j, Y" }}</p>
+    <p><strong>Due Date:</strong> {{ task.due_date }}</p>
+    <p><strong>Completed:</strong> {{ task.is_completed }}</p>
+
+    {% if is_added_to_revision %}
+    <p>This task has been added to revision tasks.</p>
+    <p><strong>Revision Added On: </strong>{{ revision_date_added }}</p>
+    <p><strong>Completed Revisions: </strong>{{ completed_revisions|join:", " }}</p>
+    <p><strong>Revision Status: </strong>{{ revision_status|title }}</p>
+    {% else %}
+        <p>This task has not been added to revision tasks yet.</p>
+    {% endif %}
+
+{% endblock %}

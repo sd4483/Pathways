@@ -1,6 +1,6 @@
 from django.urls import path, include
 from . import views
-from .plan_revise_view import planning_view, complete_task_view, revision_view, mark_revision_completed, delete_task_view, clear_completed_tasks
+from .plan_revise_view import planning_view, complete_task_view, revision_view, mark_revision_completed, delete_task_view, clear_completed_tasks, single_task_view
 from .resources_view import resource_archive_view, image_resource_view, text_resource_view, link_resource_view, file_resource_view, resource_sorted_view, text_resource_delete_view, image_resource_delete_view, link_resource_delete_view, file_resource_delete_view
 
 urlpatterns = [
@@ -32,4 +32,5 @@ urlpatterns = [
     path('mark_revision_completed/<int:revision_id>/', mark_revision_completed, name='mark_revision_completed'),
     path('pathways/<int:pathway_id>/follow/', views.follow_pathway, name='follow_pathway'),
     path('unfollow_pathway/<int:pathway_id>/', views.unfollow_pathway, name='unfollow_pathway'),
+    path('pathway/<int:pathway_id>/single-task/<int:task_id>/', single_task_view, name='single_task'),
 ]

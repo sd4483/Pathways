@@ -16,9 +16,11 @@
         <div class="justify-self-end">
         {% if not user.is_authenticated %}
         <div class="flex gap-4 justify-between text-base font-medium z-20 my-1">
+            {% if not request.path == '/pathways/' %}
             <div>
                 <a href="{% url 'view_pathway'%}" class="rounded p-2 bg-slate-300">View Pathways</a>
             </div>
+            {% endif %}
             <div>
                 <a href="{% url 'register' %}" class="rounded p-2 bg-slate-300">Register</a>
             </div>

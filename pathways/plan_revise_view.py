@@ -45,6 +45,56 @@ def planning_view(request, pathway_id):
         'is_user_following': is_user_following,
     })
 
+
+def single_task_view(request, pathway_id, task_id):
+    pathway = get_object_or_404(Pathway, id=pathway_id)
+    task = get_object_or_404(StudyTask, id=task_id, user=request.user, pathway=pathway)
+
+    is_added_to_revision = Revision.objects.filter(study_task=task).exists()
+
+    revision_status = None
+    completed_revisions = ["None"]
+    revision_date_added = None
+
+    revision_entry = Revision.objects.filter(study_task=task).first()
+    if revision_entry:
+        print("first_revision_status:", revision_entry.first_revision_status)
+        print("second_revision_status:", revision_entry.second_revision_status)
+        print("third_revision_status:", revision_entry.third_revision_status)
+        print("fourth_revision_status:", revision_entry.fourth_revision_status)
+
+
+    if is_added_to_revision:
+        revisions_for_task = Revision.objects.filter(study_task=task)
+        first_revision_entry = revisions_for_task.first()
+        revision_date_added = first_revision_entry.created_date
+        revision_status = first_revision_entry.overall_status
+
+        for revision in revisions_for_task:
+            if revision.first_revision_status == Revision.COMPLETED:
+                completed_revisions.append("FIRST")
+                completed_revisions.remove("None")
+            if revision.second_revision_status == Revision.COMPLETED:
+                completed_revisions.append("SECOND")
+            if revision.third_revision_status == Revision.COMPLETED:
+                completed_revisions.append("THIRD")
+            if revision.fourth_revision_status == Revision.COMPLETED:
+                completed_revisions.append("FOURTH")
+
+    context = {
+        'task': task,
+        'pathway': pathway,
+        'is_added_to_revision':is_added_to_revision,
+        'revision_status': revision_status,
+        'completed_revisions': completed_revisions,
+        'revision_date_added': revision_date_added,
+    }
+
+    return render(request, 'pathways/single_task_template.html', context)
+
+
+
+
 def delete_task_view(request, pathway_id, task_id):
     pathway = get_object_or_404(Pathway, id=pathway_id)
     task = get_object_or_404(StudyTask, id=task_id, user=request.user, pathway=pathway)
@@ -65,7 +115,6 @@ def clear_completed_tasks(request, pathway_id):
     completed_tasks.update(is_visible=False)
 
     return redirect('planning', pathway_id=pathway.id)
-
 
 
 def revision_view(request, pathway_id):
@@ -109,12 +158,22 @@ def mark_revision_completed(request, revision_id):
         Revision.FOURTH: "completed"
     }
 
+    REVISION_STATUS_MAP = {
+        Revision.FIRST: "first_revision_status",
+        Revision.SECOND: "second_revision_status",
+        Revision.THIRD: "third_revision_status",
+        Revision.FOURTH: "fourth_revision_status",
+    }
+
     next_due_dates = {
         Revision.FIRST:  timedelta(days=1),
         Revision.SECOND: timedelta(days=6),
         Revision.THIRD:  timedelta(days=9),
         Revision.FOURTH: timedelta(days=14),
     }
+
+    setattr(revision, REVISION_STATUS_MAP[revision.revision_type], Revision.COMPLETED)
+    revision.save()
 
     next_revision_type = REVISION_TYPE_MAP[revision.revision_type]
 

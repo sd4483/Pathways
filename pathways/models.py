@@ -6,8 +6,6 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 import os
 
-# Create your models here.
-
 class Pathway(models.Model):
     VISIBILITY_CHOICES = [
         ('public', 'Public'),
