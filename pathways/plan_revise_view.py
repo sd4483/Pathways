@@ -3,6 +3,8 @@ from django.http import HttpResponseForbidden
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import StudyTask, Pathway, Revision, FollowedPathway
 from .forms import StudyTaskForm
+import plotly.graph_objects as go
+from datetime import datetime, timedelta
 
 def planning_view(request, pathway_id):
     pathway = get_object_or_404(Pathway, id=pathway_id)
@@ -55,6 +57,8 @@ def single_task_view(request, pathway_id, task_id):
     revision_status = None
     completed_revisions = ["None"]
     revision_date_added = None
+    task_retention_rate = 0
+    dates = []
 
     revision_entry = Revision.objects.filter(study_task=task).first()
     if revision_entry:
@@ -68,7 +72,9 @@ def single_task_view(request, pathway_id, task_id):
         revisions_for_task = Revision.objects.filter(study_task=task)
         first_revision_entry = revisions_for_task.first()
         revision_date_added = first_revision_entry.created_date
+        task_retention_rate = first_revision_entry.retention_rate
         revision_status = first_revision_entry.overall_status
+        dates = [revision_date_added + timedelta(days=i) for i in range(30)]
 
         for revision in revisions_for_task:
             if revision.first_revision_status == Revision.COMPLETED:
@@ -81,6 +87,31 @@ def single_task_view(request, pathway_id, task_id):
             if revision.fourth_revision_status == Revision.COMPLETED:
                 completed_revisions.append("FOURTH")
 
+    count_of_revisions = 0
+
+    if "None" in completed_revisions:
+        count_of_revisions = 0
+    else:
+        count_of_revisions = len(completed_revisions)
+
+    fig = go.Figure()
+
+    fig.add_trace(go.Scatter(
+        x=dates,
+        y=[task_retention_rate]*30,
+        mode='lines',
+        name='Retention Rate'
+    ))
+
+    fig.update_layout(
+        title='Retention Rate for Task Over 30 Days',
+        xaxis_title='30 Days',
+        yaxis_title='Retention Rate (%)',
+        yaxis=dict(range=[0, 100]) 
+    )
+
+    plot_div = fig.to_html(full_html=False)
+
     context = {
         'task': task,
         'pathway': pathway,
@@ -88,11 +119,12 @@ def single_task_view(request, pathway_id, task_id):
         'revision_status': revision_status,
         'completed_revisions': completed_revisions,
         'revision_date_added': revision_date_added,
+        'count_of_revisions': count_of_revisions,
+        'task_retention_rate': task_retention_rate,
+        'plot_div': plot_div,
     }
 
     return render(request, 'pathways/single_task_template.html', context)
-
-
 
 
 def delete_task_view(request, pathway_id, task_id):
@@ -138,15 +170,11 @@ def revision_view(request, pathway_id):
         user_revisions = []
         completed_revisions = []
 
-    total_retention = sum(revision.retention_rate for revision in user_revisions)
-    average_retention = total_retention / len(user_revisions) if user_revisions else 0
-
     return render(request, 'pathways/revision_template.html', 
                   {'revisions': user_revisions, 
                    'completed_revisions': completed_revisions, 
                    'pathway':pathway, 'error_message': error_message, 
-                   'is_user_following': is_user_following, 
-                   'average_retention': average_retention})
+                   'is_user_following': is_user_following,})
 
 def mark_revision_completed(request, revision_id):
     revision = get_object_or_404(Revision, id=revision_id)

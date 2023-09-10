@@ -4,21 +4,75 @@
 
 {% load tz %}
 {% now "Y-m-d" as now %}
+    <div class="text-xl pb-2 font-bold">Task Details & Stats</div>
+    
+    {% if user.is_authenticated %}
+        <div class="my-4 bg-slate-200 rounded p-4">
+            <div class="font-bold pb-4">Planning</div>
+            <table class="min-w-full bg-slate-300 shadow-md rounded overflow-hidden">
+                <tbody>
+                    <tr>
+                        <td class="px-4 py-3 font-semibold">Task name:</td>
+                        <td class="px-4 py-3">{{ task.title }}</td>
+                    </tr>
+                    <tr class="border-t">
+                        <td class="px-4 py-3 font-semibold">Task created on:</td>
+                        <td class="px-4 py-3">{{ task.created_at|date:"M d, Y" }}</td>
+                    </tr>
+                    <tr class="border-t">
+                        <td class="px-4 py-3 font-semibold">Task due date:</td>
+                        <td class="px-4 py-3">{{ task.due_date|date:"M d, Y" }}</td>
+                    </tr>
+                    <tr class="border-t">
+                        <td class="px-4 py-3 font-semibold">Task status:</td>
+                        {% if task.is_completed %}
+                            <td class="px-4 py-3">Completed</td>
+                        {% else %}
+                            <td class="px-4 py-3">Pending</td>
+                        {% endif %}
+                    </tr>
+                </tbody>
+            </table>     
+        </div>
 
-    <h2>Task Details</h2>
+        <div class="mb-4 bg-slate-200 rounded p-4">
+            <div class="font-bold pb-4">Revision</div>
+            {% if is_added_to_revision %}
+                <table class="min-w-full bg-slate-300 shadow-md rounded overflow-hidden">
+                    <tbody>
+                        <tr>
+                            <td class="px-4 py-3 font-semibold">Added to revision on:</td>
+                            <td class="px-4 py-3">{{ revision_date_added|date:"M d, Y" }}</td>
+                        </tr>
+                        <tr class="border-t">
+                            <td class="px-4 py-3 font-semibold">Revisions completed:</td>
+                            <td class="px-4 py-3">{{ completed_revisions|join:", " }}</td>
+                        </tr>
+                        <tr class="border-t">
+                            <td class="px-4 py-3 font-semibold">Number of revisions completed:</td>
+                            <td class="px-4 py-3">{{ count_of_revisions }}/4</td>
+                        </tr>
+                        <tr class="border-t">
+                            <td class="px-4 py-3 font-semibold">Overall revision status:</td>
+                            <td class="px-4 py-3">{{ revision_status|title }}</td>
+                        </tr>
+                        <tr class="border-t">
+                            <td class="px-4 py-3 font-semibold">Retention rate:</td>
+                            <td class="px-4 py-3">{{ task_retention_rate }}%</td>
+                        </tr>
+                    </tbody>
+                </table>
 
-    <p><strong>Title:</strong> {{ task.title }}</p>
-    <p><strong>Task Creation Date:</strong> {{ task.created_at|date:"F j, Y" }}</p>
-    <p><strong>Due Date:</strong> {{ task.due_date }}</p>
-    <p><strong>Completed:</strong> {{ task.is_completed }}</p>
+                <div class="mt-4 rounded">{{ plot_div|safe }}</div>
+            {% else %}
+                <div class="bg-slate-300 shadow-md rounded overflow-hidden p-4">
+                    Task will be added to revision tasks once it's completed.
+                </div>
+            {% endif %}
+        </div>
 
-    {% if is_added_to_revision %}
-    <p>This task has been added to revision tasks.</p>
-    <p><strong>Revision Added On: </strong>{{ revision_date_added }}</p>
-    <p><strong>Completed Revisions: </strong>{{ completed_revisions|join:", " }}</p>
-    <p><strong>Revision Status: </strong>{{ revision_status|title }}</p>
     {% else %}
-        <p>This task has not been added to revision tasks yet.</p>
+        <p>You need to be a registered user and logged in to view this.</p>    
     {% endif %}
 
 {% endblock %}
