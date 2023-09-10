@@ -946,6 +946,11 @@ video {
   background-color: rgb(51 65 85 / var(--tw-bg-opacity)) !important;
 }
 
+.bg-red-600 {
+  --tw-bg-opacity: 1 !important;
+  background-color: rgb(220 38 38 / var(--tw-bg-opacity)) !important;
+}
+
 .p-2 {
   padding: 0.5rem !important;
 }
@@ -1166,6 +1171,11 @@ video {
 .hover\:bg-slate-800:hover {
   --tw-bg-opacity: 1 !important;
   background-color: rgb(30 41 59 / var(--tw-bg-opacity)) !important;
+}
+
+.hover\:bg-red-700:hover {
+  --tw-bg-opacity: 1 !important;
+  background-color: rgb(185 28 28 / var(--tw-bg-opacity)) !important;
 }
 
 .focus\:border-black:focus {

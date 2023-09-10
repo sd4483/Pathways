@@ -26,10 +26,18 @@
         <div class="grid grid-cols-2 gap-4">
             <!-- Displaying the To Study tasks -->
             <div class="my-4 bg-slate-200 rounded p-4">
-                <div class="font-bold pb-2">To Study</div>
+                <div class="flex justify-between items-center mb-4">
+                    <div class="font-bold">To Study</div>
+                    <button id="tasks-edit-button" class="px-4 py-1 rounded bg-slate-900 text-white text-sm hover:bg-slate-800">Edit</button>
+                </div>
+                
                 {% for task in to_study_tasks %}
-                <div class="flex justify-between gap-4 items-center my-2">
-                    <div class="flex justify-between items-center bg-slate-300 rounded p-2 w-full">
+                <div class="flex justify-between items-center my-2">
+                    <form method="post" action="{% url 'delete_task' pathway.id task.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="hidden delete-button text-white bg-red-600 hover:bg-red-700 rounded px-4 py-2 mr-4">Delete</button>
+                    </form>
+                    <div class="flex justify-between items-center bg-slate-300 rounded p-2 mr-4 w-full">
                         <span>{{ task.title }}</span>
                         {% if task.due_date|date:"Y-m-d" < now %}
                             <span class="text-red-600 text-sm">Due by {{ task.due_date }}</span>
@@ -74,6 +82,34 @@
     document.querySelector('#{{ form.due_date.id_for_label }}').addEventListener('change', function(e) {
         document.querySelector('#selectedDate').textContent = e.target.value;
     });
+
+    var deleteButtons = document.querySelectorAll('.delete-button');
+    deleteButtons.forEach(function(button) {
+        button.addEventListener('click', function(event) {
+            if (!confirm('Are you sure you want to delete this task?')) {
+                event.preventDefault();
+            }
+        });
+    });
+
+    const editButton = document.getElementById('tasks-edit-button')
+    
+    editButton.addEventListener("click", function() {
+        if (editButton.textContent === "Edit") {
+            editButton.textContent = "Cancel";
+        } else {
+            editButton.textContent = "Edit";
+        }
+        const deleteButtons = document.querySelectorAll(".delete-button");
+        deleteButtons.forEach(button => {
+            if (button.classList.contains("hidden")) {
+                button.classList.remove("hidden");
+            } else {
+                button.classList.add("hidden");
+            }
+        });
+    });
+
 </script>
 
 {% endblock %}

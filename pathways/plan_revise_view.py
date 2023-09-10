@@ -45,6 +45,12 @@ def planning_view(request, pathway_id):
         'is_user_following': is_user_following,
     })
 
+def delete_task_view(request, pathway_id, task_id):
+    pathway = get_object_or_404(Pathway, id=pathway_id)
+    task = get_object_or_404(StudyTask, id=task_id, user=request.user, pathway=pathway)
+    task.delete()
+    return redirect('planning', pathway_id=pathway_id)
+    
 
 def complete_task_view(request, pathway_id, task_id):
     pathway = get_object_or_404(Pathway, id=pathway_id)
@@ -69,8 +75,8 @@ def revision_view(request, pathway_id):
         if not (FollowedPathway.objects.filter(user=request.user, pathway=pathway).exists() or pathway.user == request.user):
             error_message = "You need to follow this pathway to plan or revise."
         else:
-            user_revisions = Revision.objects.filter(study_task__user=request.user, study_task__pathway=pathway_id, status=Revision.PENDING).order_by('due_date')
-            completed_revisions = Revision.objects.filter(study_task__user=request.user, study_task__pathway=pathway_id, status=Revision.COMPLETED).order_by('due_date')
+            user_revisions = Revision.objects.filter(study_task__user=request.user, study_task__pathway=pathway_id, overall_status=Revision.PENDING).order_by('due_date')
+            completed_revisions = Revision.objects.filter(study_task__user=request.user, study_task__pathway=pathway_id, overall_status=Revision.COMPLETED).order_by('due_date')
     else:
         user_revisions = []
         completed_revisions = []

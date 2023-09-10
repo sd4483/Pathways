@@ -117,20 +117,31 @@ class Revision(models.Model):
 
     study_task = models.ForeignKey(StudyTask, on_delete=models.CASCADE, related_name='revisions')
     pathway = models.ForeignKey(Pathway, on_delete=models.CASCADE, related_name="revisions")
-    revision_type = models.CharField(max_length=10, choices=REVISION_TYPE)
-    status = models.CharField(max_length=10, choices=REVISION_STATUS, default=PENDING)
     created_date = models.DateField(auto_now_add=True)
     due_date = models.DateField()
+    revision_type = models.CharField(max_length=10, choices=REVISION_TYPE)
+
+    first_revision_status = models.CharField(max_length=10, choices=REVISION_STATUS, default=PENDING)
+    second_revision_status = models.CharField(max_length=10, choices=REVISION_STATUS, default=PENDING)
+    third_revision_status = models.CharField(max_length=10, choices=REVISION_STATUS, default=PENDING)
+    fourth_revision_status = models.CharField(max_length=10, choices=REVISION_STATUS, default=PENDING)
+
+    overall_status = models.CharField(max_length=10, choices=REVISION_STATUS, default=PENDING)
 
     @property
-    def progress_percentage(self):
-        return {
-            self.FIRST: 25,
-            self.SECOND: 50,
-            self.THIRD: 75,
-            self.FOURTH: 100
-        }.get(self.revision_type, 0)
-    
+    def is_all_completed(self):
+        return all([
+            self.first_revision_status == self.COMPLETED,
+            self.second_revision_status == self.COMPLETED,
+            self.third_revision_status == self.COMPLETED,
+            self.fourth_revision_status == self.COMPLETED
+        ])
+
+    def save(self, *args, **kwargs):
+        if self.is_all_completed:
+            self.overall_status = self.COMPLETED
+        super(Revision, self).save(*args, **kwargs)
+
     @property
     def days_since_created(self):
         return (date.today() - self.created_date).days
@@ -141,22 +152,22 @@ class Revision(models.Model):
             return 100
 
         if self.days_since_created == 1:
-            if self.revision_type == self.FIRST:
+            if self.first_revision_status == self.COMPLETED:
                 return 85
             return 70
 
         if self.days_since_created <= 7:
-            if self.revision_type == self.SECOND:
+            if self.second_revision_status == self.COMPLETED:
                 return 60
             return 40
 
         if self.days_since_created <= 16:
-            if self.revision_type == self.THIRD:
+            if self.third_revision_status == self.COMPLETED:
                 return 40
             return 20
 
         if self.days_since_created <= 30:
-            if self.revision_type == self.FOURTH:
+            if self.fourth_revision_status == self.COMPLETED:
                 return 25
             return 10
 
