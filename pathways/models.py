@@ -82,6 +82,7 @@ class StudyTask(models.Model):
     pathway = models.ForeignKey(Pathway, on_delete=models.CASCADE, related_name="tasks")
     title = models.CharField(max_length=200)
     is_completed = models.BooleanField(default=False)
+    is_visible = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     due_date = models.DateField(blank=True, null=True)
 

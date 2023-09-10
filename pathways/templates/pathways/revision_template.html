@@ -106,11 +106,9 @@
         <div class="bg-slate-200 p-4 rounded mb-10">
             <h3 class="mb-4 font-bold">Completed Revisions</h3>
             {% for revision in completed_revisions %}
-                {% if revision.status == 'completed' %}
-                    <div class="mb-4 p-4 bg-slate-300 line-through text-gray-600 rounded">
-                        {{ revision.study_task.title }}
-                    </div>
-                {% endif %}
+                <div class="mb-4 p-4 bg-slate-300 line-through text-gray-600 rounded">
+                    {{ revision.study_task.title }}
+                </div>
             {% endfor %}
         </div>
 

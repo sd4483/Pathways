@@ -31,7 +31,7 @@ def planning_view(request, pathway_id):
             error_message = "You need to follow this pathway to plan or revise."
         else:
             to_study_tasks = StudyTask.objects.filter(user=request.user, is_completed=False, pathway=pathway)
-            completed_tasks = StudyTask.objects.filter(user=request.user, is_completed=True, pathway=pathway)
+            completed_tasks = StudyTask.objects.filter(user=request.user, is_completed=True, pathway=pathway, is_visible=True)
     else:
         to_study_tasks = []
         completed_tasks = []
@@ -58,6 +58,14 @@ def complete_task_view(request, pathway_id, task_id):
     task.is_completed = True
     task.save()
     return redirect('planning', pathway_id=pathway.id)
+
+def clear_completed_tasks(request, pathway_id):
+    pathway = get_object_or_404(Pathway, id=pathway_id)
+    completed_tasks = StudyTask.objects.filter(pathway=pathway, user=request.user, is_completed=True)
+    completed_tasks.update(is_visible=False)
+
+    return redirect('planning', pathway_id=pathway.id)
+
 
 
 def revision_view(request, pathway_id):
@@ -111,7 +119,7 @@ def mark_revision_completed(request, revision_id):
     next_revision_type = REVISION_TYPE_MAP[revision.revision_type]
 
     if next_revision_type == "completed":
-        revision.status = Revision.COMPLETED
+        revision.overall_status = Revision.COMPLETED
         revision.save()
     elif next_revision_type:
         revision.revision_type = next_revision_type
