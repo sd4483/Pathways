@@ -5,7 +5,7 @@
 {% load tz %}
 {% now "Y-m-d" as now %}
 <div class="text-xl pb-2 font-bold">Revision for {{ pathway.title }}</div>
-
+<div class="mb-6 mt-2 p-2 rounded bg-slate-200">📌 Clicking on each task will reveal more details and stats for the task</div>
 {% if user.is_authenticated %}
     {% if not error_message %}
         <div class="my-4 grid grid-cols-2 gap-6 mb-10">
@@ -22,7 +22,6 @@
                                 {% else %}
                                     <span class="text-gray-700 text-sm">{{ revision.due_date }}</span>
                                 {% endif %}
-                                {{ revision.retention_rate }}
                             </div>
                             <button onclick="location.href='{% url 'mark_revision_completed' revision.id %}'" class="text-white bg-green-600 hover:bg-green-700 rounded px-4 py-2">
                                 ✓
@@ -45,7 +44,6 @@
                                 {% else %}
                                     <span class="text-gray-700 text-sm">{{ revision.due_date }}</span>
                                 {% endif %}
-                                {{ revision.retention_rate }}
                             </div>
                             <button onclick="location.href='{% url 'mark_revision_completed' revision.id %}'" class="text-white bg-green-600 hover:bg-green-700 rounded px-4 py-2">
                                 ✓
@@ -68,7 +66,6 @@
                                 {% else %}
                                     <span class="text-gray-700 text-sm">{{ revision.due_date }}</span>
                                 {% endif %}
-                                {{ revision.retention_rate }}
                             </div>
                             <button onclick="location.href='{% url 'mark_revision_completed' revision.id %}'" class="text-white bg-green-600 hover:bg-green-700 rounded px-4 py-2">
                                 ✓
@@ -91,7 +88,6 @@
                                 {% else %}
                                     <span class="text-gray-700 text-sm">{{ revision.due_date }}</span>
                                 {% endif %}
-                                {{ revision.retention_rate }}
                             </div>
                             <button onclick="location.href='{% url 'mark_revision_completed' revision.id %}'" class="text-white bg-green-600 hover:bg-green-700 rounded px-4 py-2">
                                 ✓

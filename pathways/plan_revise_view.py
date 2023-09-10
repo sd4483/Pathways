@@ -60,6 +60,11 @@ def single_task_view(request, pathway_id, task_id):
     task_retention_rate = 0
     dates = []
 
+    if request.user.is_authenticated:
+        is_user_following = request.user.followedpathway_set.filter(pathway=pathway).exists()
+    else:
+        is_user_following = False
+
     revision_entry = Revision.objects.filter(study_task=task).first()
     if revision_entry:
         print("first_revision_status:", revision_entry.first_revision_status)
@@ -122,6 +127,7 @@ def single_task_view(request, pathway_id, task_id):
         'count_of_revisions': count_of_revisions,
         'task_retention_rate': task_retention_rate,
         'plot_div': plot_div,
+        'is_user_following': is_user_following,
     }
 
     return render(request, 'pathways/single_task_template.html', context)
