@@ -1,6 +1,9 @@
 {% extends 'pathways/single_pathway_template.html' %}
 
 {% block pathway_content %}
+
+{% include 'django_quill/media.html' %}
+
     <div class="text-xl pb-2 font-bold">Resource Archive</div>
             
     <div class="py-4 font-bold">Add Resources</div>
@@ -64,7 +67,7 @@
                 <label class="text-sm font-medium mb-2">Title</label>
                 {{ image_resource_form.title }}
                 <label class="text-sm font-medium mb-2">Notes</label>
-                {{ image_resource_form.notes }}
+                {{ image_resource_form.image_notes }}
                 <label class="text-sm font-medium mb-2">Image</label>
                 {{ image_resource_form.image }}
                 <button type="submit" name="image_resource" class="bg-blue-500 hover:bg-blue-600 mt-4 px-2 py-1 text-white rounded">Add Image Resource</button>
@@ -85,7 +88,7 @@
                 <label class="text-sm font-medium mb-2">Title</label>
                 {{ file_resource_form.title }}
                 <label class="text-sm font-medium mb-2">Notes</label>
-                {{ file_resource_form.notes }}
+                {{ file_resource_form.file_notes }}
                 <label class="text-sm font-medium mb-2">File</label>
                 {{ file_resource_form.attachment }}
                 <button type="submit" name="file_resource" class="bg-blue-500 hover:bg-blue-600 text-white mt-4 px-2 py-1 rounded">Add File Resource</button>
@@ -106,7 +109,7 @@
                 <label class="text-sm font-medium mb-2">Title</label>
                 {{ link_resource_form.title }}
                 <label class="text-sm font-medium mb-2">Notes</label>
-                {{ link_resource_form.notes }}
+                {{ link_resource_form.link_notes }}
                 <label class="text-sm font-medium mb-2">URL</label>
                 {{ link_resource_form.url }}
                 <button type="submit" name="link_resource" class="bg-blue-500 hover:bg-blue-600 text-white mt-4 px-2 py-1 rounded">Add Link Resource</button>
@@ -138,7 +141,7 @@
                     </div>
                 </button>
                 <div class="hidden mt-4">
-                    {{ resource.content|safe }}
+                    {{ resource.content.html|safe }}
                     {% if resource.created_by == request.user %}
                         <div class="flex justify-between mt-2">
                             <div class="pseudo-element"></div>
@@ -162,7 +165,7 @@
                 <div class="hidden mt-4">
 
                     <div class="text-gray-800">
-                        <div class="mb-4">{{ resource.notes }}</div>
+                        <div class="mb-4">{{ resource.image_notes.html|safe }}</div>
                         <img class="rounded" src="{{ resource.image.url }}" alt="{{ resource.title }}">
                         {% if resource.created_by == request.user %}
                             <div class="flex justify-between mt-4">
@@ -189,7 +192,7 @@
                 <div class="mt-4 hidden">
 
                     <div class="text-gray-800">
-                        <div class="mb-4">{{ resource.notes }}</div>
+                        <div class="mb-4">{{ resource.file_notes.html|safe }}</div>
                         <a href="{{ resource.attachment.url }}" target="_blank" class="underline">{{ resource.name }}</a>
                         {% if resource.created_by == request.user %}
                             <div class="flex justify-between mt-2">
@@ -214,7 +217,7 @@
                     </div>
                 </button>
                 <div class="truncate mt-4 hidden">
-
+                    <div class="mb-4">{{ resource.link_notes.html|safe }}</div>
                     <div class="flex justify-between items-center gap-4 bg-slate-700 text-white p-4 rounded">
                         <div class="flex gap-4">
                             {% if resource.fetched_image_url %}
