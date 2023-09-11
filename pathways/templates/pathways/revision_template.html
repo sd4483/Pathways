@@ -5,8 +5,8 @@
 {% load tz %}
 {% now "Y-m-d" as now %}
 <div class="text-xl pb-2 font-bold">Revision for {{ pathway.title }}</div>
-<div class="mb-6 mt-2 p-2 rounded bg-slate-200">📌 Clicking on each task will reveal more details and stats for the task</div>
 {% if user.is_authenticated %}
+<div class="mb-6 mt-2 p-2 rounded bg-slate-200">📌 Clicking on each task will reveal more details and stats for the task</div>
     {% if not error_message %}
         <div class="my-4 grid grid-cols-2 gap-6 mb-10">
             <!-- First Revision Box -->

@@ -98,12 +98,18 @@ def single_task_view(request, pathway_id, task_id):
         count_of_revisions = 0
     else:
         count_of_revisions = len(completed_revisions)
+        
+    retention_rates = []
+
+    for day in range(30):
+        revision_date_added = day  # Set the day
+        retention_rates.append(task_retention_rate)
 
     fig = go.Figure()
 
     fig.add_trace(go.Scatter(
         x=dates,
-        y=[task_retention_rate]*30,
+        y=retention_rates,
         mode='lines',
         name='Retention Rate'
     ))

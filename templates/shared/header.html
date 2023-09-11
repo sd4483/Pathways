@@ -30,9 +30,11 @@
         </div>
         {% else %}
         <div class="flex gap-6 justify-between text-base font-medium z-20 my-1">
+            {% if not request.path == '/pathways/' %}
             <div>
                 <a href="{% url 'view_pathway'%}" class="rounded p-2 bg-slate-300">View Pathways</a>
             </div>
+            {% endif %}
             <div>
                 <a href="{% url 'logout' %}" class="rounded p-2 bg-slate-300">Logout</a>
             </div>
