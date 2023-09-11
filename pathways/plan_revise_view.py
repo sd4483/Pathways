@@ -3,8 +3,6 @@ from django.http import HttpResponseForbidden
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import StudyTask, Pathway, Revision, FollowedPathway
 from .forms import StudyTaskForm
-import plotly.graph_objects as go
-from datetime import datetime, timedelta
 
 def planning_view(request, pathway_id):
     pathway = get_object_or_404(Pathway, id=pathway_id)
@@ -99,29 +97,6 @@ def single_task_view(request, pathway_id, task_id):
     else:
         count_of_revisions = len(completed_revisions)
         
-    retention_rates = []
-
-    for day in range(30):
-        revision_date_added = day  # Set the day
-        retention_rates.append(task_retention_rate)
-
-    fig = go.Figure()
-
-    fig.add_trace(go.Scatter(
-        x=dates,
-        y=retention_rates,
-        mode='lines',
-        name='Retention Rate'
-    ))
-
-    fig.update_layout(
-        title='Retention Rate for Task Over 30 Days',
-        xaxis_title='30 Days',
-        yaxis_title='Retention Rate (%)',
-        yaxis=dict(range=[0, 100]) 
-    )
-
-    plot_div = fig.to_html(full_html=False)
 
     context = {
         'task': task,
@@ -132,7 +107,6 @@ def single_task_view(request, pathway_id, task_id):
         'revision_date_added': revision_date_added,
         'count_of_revisions': count_of_revisions,
         'task_retention_rate': task_retention_rate,
-        'plot_div': plot_div,
         'is_user_following': is_user_following,
     }
 
