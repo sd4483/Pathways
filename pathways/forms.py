@@ -1,6 +1,7 @@
 from django import forms
 from .models import Pathway, LinkResource, FileResource, TextResource, ImageResource, Comment, Reply, StudyTask
 
+
 class PathwayForm(forms.ModelForm):
     class Meta:
         model = Pathway
@@ -35,36 +36,33 @@ class PathwayRepliesForm(forms.ModelForm):
 class LinkResourceForm(forms.ModelForm):
     class Meta:
         model = LinkResource
-        fields = ['title', 'notes', 'url']
+        fields = ['title', 'link_notes', 'url']
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['title'].widget.attrs.update({'class': 'w-full mb-2 mt-1 py-2 px-3 border border-slate-500 focus:outline-none focus:border-slate-700 text-black block bg-transparent rounded'})
-        self.fields['notes'].widget.attrs.update({'class': 'w-full mb-2 mt-1 py-2 px-3 border border-slate-500 focus:outline-none focus:border-slate-700 text-black block bg-transparent rounded'})
         self.fields['url'].widget.attrs.update({'class': 'w-full py-2 mt-1 px-3 border border-slate-500 focus:outline-none focus:border-slate-700 text-black block bg-transparent rounded'})
 
 
 class FileResourceForm(forms.ModelForm):
     class Meta:
         model = FileResource
-        fields = ['title', 'notes', 'attachment']
+        fields = ['title', 'file_notes', 'attachment']
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['title'].widget.attrs.update({'class': 'w-full mb-2 mt-1 py-2 px-3 border border-slate-500 focus:outline-none focus:border-slate-700 text-black block bg-transparent rounded'})
-        self.fields['notes'].widget.attrs.update({'class': 'w-full mb-2 mt-1 py-2 px-3 border border-slate-500 focus:outline-none focus:border-slate-700 text-black block bg-transparent rounded'})
         self.fields['attachment'].widget.attrs.update({'class': 'w-full py-2 mt-1 px-3 border border-slate-500 focus:outline-none focus:border-slate-700 text-black block bg-transparent rounded'})
 
 
 class ImageResourceForm(forms.ModelForm):
     class Meta:
         model = ImageResource
-        fields = ['title', 'notes', 'image']
+        fields = ['title', 'image_notes', 'image']
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['title'].widget.attrs.update({'class': 'w-full mb-2 mt-1 py-2 px-3 border border-slate-500 focus:outline-none focus:border-slate-700 text-black block bg-transparent rounded'})
-        self.fields['notes'].widget.attrs.update({'class': 'w-full mb-2 mt-1 py-2 px-3 border border-slate-500 focus:outline-none focus:border-slate-700 text-black block bg-transparent rounded'})
         self.fields['image'].widget.attrs.update({'class': 'w-full py-2 mt-1 px-3 border border-slate-500 focus:outline-none focus:border-slate-700 text-black block bg-transparent rounded'})
 
 class TextResourceForm(forms.ModelForm):
@@ -75,8 +73,6 @@ class TextResourceForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['title'].widget.attrs.update({'class': 'w-full mb-2 mt-1 py-2 px-3 border border-slate-500 focus:outline-none focus:border-slate-700 text-black block bg-transparent rounded'})
-        self.fields['content'].widget.attrs.update({'class': 'w-full mt-1 py-2 px-3 border border-slate-500 focus:outline-none focus:border-slate-700 text-black block bg-transparent rounded'})
-
 
 class StudyTaskForm(forms.ModelForm):
     due_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))

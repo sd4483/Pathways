@@ -4,7 +4,25 @@
 <html>
     <head>
         <link rel="stylesheet" href="{% static 'src/styles.css' %}">
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <style>
+            .ql-toolbar {
+                border-radius: 3px 3px 0px 0px !important;
+                border: 1px solid #64748b !important;
+            }
+            .ql-container {
+                border-radius: 0px 0px 3px 3px !important;
+                border-top: 0px !important;
+                border-left: 1px solid #64748b !important;
+                border-right: 1px solid #64748b !important;
+                border-bottom: 1px solid #64748b !important;
+                min-height: 100px !important;
+                font-size: 16px !important;
+            }
+            .django-quill-widget-container {
+                margin-top: 8px;
+                margin-bottom: 8px;
+            }
+        </style>
     </head>
 <!-- templates/shared/header.html -->
 <header class="text-black bg-slate-200 rounded m-4 font-sans">

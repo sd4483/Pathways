@@ -672,6 +672,10 @@ video {
   height: 1.25rem !important;
 }
 
+.h-64 {
+  height: 16rem !important;
+}
+
 .min-h-screen {
   min-height: 100vh !important;
 }

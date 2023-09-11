@@ -2,6 +2,8 @@
 
 {% block pathway_content %}
 
+{% include 'django_quill/media.html' %}
+
     <div class="text-xl pb-2 font-bold">Resource Archive</div>
             
     <div class="py-4 font-bold">Add Resources</div>
@@ -65,9 +67,9 @@
                 <label class="text-sm font-medium mb-2">Title</label>
                 {{ image_resource_form.title }}
                 <label class="text-sm font-medium mb-2">Notes</label>
-                {{ image_resource_form.notes }}
-                <label class="text-sm font-medium mb-2">Image</label>
-                {{ image_resource_form.image }}
+                {{ image_resource_form.image_notes }}
+                <label class="text-sm font-medium">Image</label>
+                <div class="mt-2">{{ image_resource_form.image }}</div>
                 <button type="submit" name="image_resource" class="bg-blue-500 hover:bg-blue-600 mt-4 px-2 py-1 text-white rounded">Add Image Resource</button>
             </div>
         </form>
@@ -86,9 +88,9 @@
                 <label class="text-sm font-medium mb-2">Title</label>
                 {{ file_resource_form.title }}
                 <label class="text-sm font-medium mb-2">Notes</label>
-                {{ file_resource_form.notes }}
-                <label class="text-sm font-medium mb-2">File</label>
-                {{ file_resource_form.attachment }}
+                {{ file_resource_form.file_notes }}
+                <label class="text-sm font-medium">File</label>
+                <div class="mt-2">{{ file_resource_form.attachment }}</div>
                 <button type="submit" name="file_resource" class="bg-blue-500 hover:bg-blue-600 text-white mt-4 px-2 py-1 rounded">Add File Resource</button>
             </div>
         </form>
@@ -107,7 +109,7 @@
                 <label class="text-sm font-medium mb-2">Title</label>
                 {{ link_resource_form.title }}
                 <label class="text-sm font-medium mb-2">Notes</label>
-                {{ link_resource_form.notes }}
+                {{ link_resource_form.link_notes }}
                 <label class="text-sm font-medium mb-2">URL</label>
                 {{ link_resource_form.url }}
                 <button type="submit" name="link_resource" class="bg-blue-500 hover:bg-blue-600 text-white mt-4 px-2 py-1 rounded">Add Link Resource</button>
@@ -144,7 +146,7 @@
                         </button>
                         <div class="hidden mt-4">
                             <div class="text-gray-800">
-                                {{ text_resource.content|safe }}
+                                {{ text_resource.content.html|safe }}
                                 {% if text_resource.created_by == request.user %}
                                     <div class="flex justify-between mt-2">
                                         <div class="pseudo-element"></div>
@@ -176,7 +178,7 @@
                         </button>
                         <div class="hidden mt-4">
                             <div class="text-gray-800">
-                                <div class="mb-4">{{ image_resource.notes }}</div>
+                                <div class="mb-4">{{ image_resource.image_notes.html|safe }}</div>
                                 <img class="rounded" src="{{ image_resource.image.url }}" alt="{{ image_resource.title }}">
                                 {% if image_resource.created_by == request.user %}
                                     <div class="flex justify-between mt-4">
@@ -211,7 +213,7 @@
                         <div class="hidden mt-4">
                             
                             <div class="text-gray-800">
-                                <div class="mb-4">{{ file_resource.notes }}</div>
+                                <div class="mb-4">{{ file_resource.file_notes.html|safe }}</div>
                                 <a href="{{ file_resource.attachment.url }}" target="_blank" class="underline">{{ file_resource.name }}</a>
                                 {% if file_resource.created_by == request.user %}
                                     <div class="flex justify-between mt-2">
@@ -245,7 +247,7 @@
                         </button>
                         
                         <div class="truncate hidden mt-4">
-                            
+                            <div class="mb-4">{{ link_resource.link_notes.html|safe }}</div>
                             <div class="flex justify-between items-center gap-4 bg-slate-700 text-white p-4 rounded">
                                 <div class="flex gap-4">
                                     {% if link_resource.fetched_image_url %}
@@ -275,5 +277,6 @@
         </div>
         
     </div>
+        
 
 {% endblock %}

@@ -5,6 +5,7 @@ from datetime import date, timedelta
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 import os
+from django_quill.fields import QuillField
 
 class Pathway(models.Model):
     VISIBILITY_CHOICES = [
@@ -43,7 +44,7 @@ class Reply(models.Model):
 class ImageResource(models.Model):
     pathway = models.ForeignKey(Pathway, on_delete=models.CASCADE, related_name="image_resources")
     title = models.CharField(max_length=200)
-    notes = models.TextField()
+    image_notes = QuillField()
     image = models.ImageField(upload_to='resources/')
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -51,7 +52,7 @@ class ImageResource(models.Model):
 class LinkResource(models.Model):
     pathway = models.ForeignKey(Pathway, on_delete=models.CASCADE, related_name="link_resources")
     title = models.CharField(max_length=200)
-    notes = models.TextField()
+    link_notes = QuillField()
     url = models.URLField()
     fetched_title = models.CharField(max_length=512, blank=True, null=True)
     fetched_image_url = models.URLField(blank=True, null=True)
@@ -62,14 +63,14 @@ class LinkResource(models.Model):
 class TextResource(models.Model):
     pathway = models.ForeignKey(Pathway, on_delete=models.CASCADE, related_name="text_resources")
     title = models.CharField(max_length=200)
-    content = HTMLField()
+    content = QuillField()
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 
 class FileResource(models.Model):
     pathway = models.ForeignKey(Pathway, on_delete=models.CASCADE, related_name="file_resources")
     title = models.CharField(max_length=200)
-    notes = models.TextField()
+    file_notes = QuillField()
     attachment = models.FileField(upload_to='files/')
     name = models.CharField(max_length=300)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)

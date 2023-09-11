@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "pathways",
     "users",
     "tinymce",
+    'django_quill',
 ]
 
 MIDDLEWARE = [

@@ -72,6 +72,7 @@ def text_resource_view(request, pathway_id):
     if request.method == 'POST':
         if 'text_resource' in request.POST:
             if text_resource_form.is_valid():
+                print(text_resource_form.errors)
                 text_resource = text_resource_form.save(commit=False)
                 text_resource.pathway = pathway
                 text_resource.created_by = request.user
