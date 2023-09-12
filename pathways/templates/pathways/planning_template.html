@@ -37,13 +37,15 @@
                         {% csrf_token %}
                         <button type="submit" class="hidden delete-button text-white bg-red-600 hover:bg-red-700 rounded px-4 py-2 mr-4">Delete</button>
                     </form>
-                    <div class="flex justify-between items-center bg-slate-300 rounded p-2 mr-4 w-full">
-                        <span><a href="{% url 'single_task' pathway.id task.id %}">{{ task.title }}</a></span>
-                        {% if task.due_date|date:"Y-m-d" < now %}
-                            <span class="text-red-600 text-sm">Due by {{ task.due_date }}</span>
-                        {% else %}
-                            <span class="text-gray-700 text-sm">Due by {{ task.due_date }}</span>
-                        {% endif %}
+                    <div class="flex justify-between items-center gap-4 bg-slate-300 rounded p-2 mr-4 w-full">
+                        <div><a href="{% url 'single_task' pathway.id task.id %}">{{ task.title }}</a></div>
+                        <div>
+                            {% if task.due_date|date:"Y-m-d" < now %}
+                                <span class="text-red-600 text-sm">Due by {{ task.due_date|date:"d M" }}</span>
+                            {% else %}
+                                <span class="text-gray-700 text-sm">Due by {{ task.due_date|date:"d M" }}</span>
+                            {% endif %}
+                        </div>
                     </div>
                     <form method="post" action="{% url 'complete_task' pathway.id task.id %}">
                         {% csrf_token %}

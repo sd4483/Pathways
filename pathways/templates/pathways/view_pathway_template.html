@@ -26,11 +26,10 @@
                         <button id="create-button" class="px-4 py-1 rounded bg-blue-600 text-white text-sm hover:bg-blue-700">Create New</button>
                     </div>
                 </div>
-                {% if private_pathways_count > 0 %}
+                {% if private_pathways %}
                 <div class="mb-6">
                     <div class="font-bold text-black my-4">Your Private Pathways</div>
-                    {% for pathway in pathways %}
-                        {% if pathway.visibility == 'private' and pathway.user == request.user %}
+                    {% for pathway in private_pathways %}
                         <div class="flex items-center mb-2">                
                             <!-- For deleting pathways -->
                             <div class="mr-4 hidden delete-button"> 
@@ -51,7 +50,6 @@
                                 <div class="text-sm text-gray-600">created by: {{ pathway.user }}</div>
                             </div>
                         </div>
-                        {% endif %}
                     {% endfor %}
                 </div>
                 {% endif %}

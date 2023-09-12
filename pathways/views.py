@@ -9,19 +9,19 @@ from django.urls import reverse
 
 def view_pathway_view(request):
     followed_pathways = []
+    private_pathways = []
     if request.user.is_authenticated:
         followed_pathway_ids = request.user.followedpathway_set.all().values_list('pathway', flat=True)
         followed_pathways = Pathway.objects.filter(id__in=followed_pathway_ids)
-        private_pathways_count = Pathway.objects.filter(visibility='private').count()
+        private_pathways = Pathway.objects.filter(visibility='private', user=request.user)
         pathways = Pathway.objects.filter(Q(visibility='public') | Q(user=request.user))
     else:
-        private_pathways_count = 0
         pathways = Pathway.objects.filter(visibility='public')
     
     return render(request, 'pathways/view_pathway_template.html', 
                   {'pathways': pathways, 
                    'followed_pathways': followed_pathways, 
-                   'private_pathways_count' : private_pathways_count,})
+                   'private_pathways' : private_pathways,})
 
 
 def delete_pathway_view(request, pathway_id):
