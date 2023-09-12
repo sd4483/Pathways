@@ -999,6 +999,11 @@ video {
   background-color: rgb(100 116 139 / var(--tw-bg-opacity)) !important;
 }
 
+.bg-slate-100 {
+  --tw-bg-opacity: 1 !important;
+  background-color: rgb(241 245 249 / var(--tw-bg-opacity)) !important;
+}
+
 .p-2 {
   padding: 0.5rem !important;
 }
@@ -1233,6 +1238,11 @@ video {
   --tw-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1) !important;
   --tw-shadow-colored: 0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color) !important;
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow) !important;
+}
+
+.shadow-slate-200 {
+  --tw-shadow-color: #e2e8f0 !important;
+  --tw-shadow: var(--tw-shadow-colored) !important;
 }
 
 .hover\:bg-blue-600:hover {
