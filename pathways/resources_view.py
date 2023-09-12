@@ -72,13 +72,17 @@ def text_resource_view(request, pathway_id):
     if request.method == 'POST':
         if 'text_resource' in request.POST:
             if text_resource_form.is_valid():
-                print(text_resource_form.errors)
                 text_resource = text_resource_form.save(commit=False)
                 text_resource.pathway = pathway
                 text_resource.created_by = request.user
                 text_resource.save()
-                referer_url = request.META.get('HTTP_REFERER', reverse('resource_sorted', args=[pathway_id]))
-                return redirect(referer_url)
+
+                if 'add-text' in request.path:
+                    return redirect('resource_archive', pathway_id=pathway_id)
+                else:
+                    referer_url = request.META.get('HTTP_REFERER', reverse('resource_sorted', args=[pathway_id]))
+                    return redirect(referer_url)
+                
     
     return render(request, 'pathways/resource_archive_template.html', {'pathway':pathway, 'text_resource_form':text_resource_form})
 

@@ -123,6 +123,14 @@
         });
 
         document.addEventListener('DOMContentLoaded', () => {
+            const errors = textForm.querySelectorAll('.errorlist');
+            if (errors.length > 0) {
+                textForm.removeAttribute('hidden');
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+
             const textContent = document.getElementById('text-resource-content');
             
             document.getElementById('text-resource-button').addEventListener('click', function() {
@@ -183,6 +191,8 @@
             });
         });
 
+
     </script>
+
         
 {% endblock %}

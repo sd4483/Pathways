@@ -44,7 +44,7 @@ class Reply(models.Model):
 class ImageResource(models.Model):
     pathway = models.ForeignKey(Pathway, on_delete=models.CASCADE, related_name="image_resources")
     title = models.CharField(max_length=200)
-    image_notes = QuillField()
+    image_notes = QuillField(blank=True, null=True)
     image = models.ImageField(upload_to='resources/')
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -52,7 +52,7 @@ class ImageResource(models.Model):
 class LinkResource(models.Model):
     pathway = models.ForeignKey(Pathway, on_delete=models.CASCADE, related_name="link_resources")
     title = models.CharField(max_length=200)
-    link_notes = QuillField()
+    link_notes = QuillField(blank=True, null=True)
     url = models.URLField()
     fetched_title = models.CharField(max_length=512, blank=True, null=True)
     fetched_image_url = models.URLField(blank=True, null=True)
@@ -70,7 +70,7 @@ class TextResource(models.Model):
 class FileResource(models.Model):
     pathway = models.ForeignKey(Pathway, on_delete=models.CASCADE, related_name="file_resources")
     title = models.CharField(max_length=200)
-    file_notes = QuillField()
+    file_notes = QuillField(blank=True, null=True)
     attachment = models.FileField(upload_to='files/')
     name = models.CharField(max_length=300)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
