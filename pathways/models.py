@@ -24,6 +24,7 @@ class Pathway(models.Model):
 
     @property
     def votes(self):
+        #calculating the net votes to displayed in the template by subtracting downvotes from upvotes
         return self.upvotes - self.downvotes
     
 class Comment(models.Model):
@@ -44,7 +45,7 @@ class Reply(models.Model):
 class ImageResource(models.Model):
     pathway = models.ForeignKey(Pathway, on_delete=models.CASCADE, related_name="image_resources")
     title = models.CharField(max_length=200)
-    image_notes = QuillField(blank=True, null=True)
+    image_notes = QuillField(blank=True, null=True) # using QuillField instead of normal text field for text formatting
     image = models.ImageField(upload_to='resources/')
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -87,6 +88,11 @@ class StudyTask(models.Model):
 
 @receiver(post_save, sender=StudyTask)
 def create_revisions(sender, instance, **kwargs):
+    """
+    checking if the task is completed and if there's no existing Revision associated with it. 
+    If both conditions are met, create a new Revision object for the task 
+    with a due date set to one day from today.
+    """
     if instance.is_completed and not Revision.objects.filter(study_task=instance).exists():
         Revision.objects.create(
             study_task=instance,
@@ -130,6 +136,9 @@ class Revision(models.Model):
 
     @property
     def is_all_completed(self):
+        """
+        Checking if all revisions (first, second, third, fourth) are completed. Return True if completed.
+        """
         return all([
             self.first_revision_status == self.COMPLETED,
             self.second_revision_status == self.COMPLETED,
@@ -138,16 +147,26 @@ class Revision(models.Model):
         ])
 
     def save(self, *args, **kwargs):
+        """
+        If all revisions are completed, set the overall_status to COMPLETED before saving.
+        """
         if self.is_all_completed:
             self.overall_status = self.COMPLETED
         super(Revision, self).save(*args, **kwargs)
 
     @property
     def days_since_created(self):
+        """
+        Calculating the number of days since the revision was created.
+        """
         return (date.today() - self.created_date).days
 
     @property
     def retention_rate(self):
+        """
+        Calculating the retention rate based on the number of days since creation and the status of each revision.
+        Returns a percentage value representing the retention rate.
+        """
         if self.days_since_created == 0:
             return 100
 

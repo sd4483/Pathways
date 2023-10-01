@@ -8,6 +8,8 @@ from django.contrib import messages
 from django.urls import reverse
 
 def view_pathway_view(request):
+
+    # Fetching pathways based on user authentication and visibility
     followed_pathways = []
     private_pathways = []
     if request.user.is_authenticated:
@@ -31,6 +33,8 @@ def delete_pathway_view(request, pathway_id):
 
 
 def create_pathway_view(request):
+
+    # Handling form submission
     if request.method == 'POST':
         form = PathwayForm(request.POST)
         if form.is_valid():
@@ -45,10 +49,14 @@ def create_pathway_view(request):
 
 def single_pathway_view(request, pathway_id):
     pathway = get_object_or_404(Pathway, pk=pathway_id)
+
+    # Initialize resource forms
     text_resource_form = TextResourceForm(prefix='text_resource')
     image_resource_form = ImageResourceForm(prefix='image_resource')
     link_resource_form = LinkResourceForm()
     file_resource_form = FileResourceForm()
+
+    # Checking if the user is following the pathway, used for FollowPathway feature functionality
     if request.user.is_authenticated:
         is_user_following = request.user.followedpathway_set.filter(pathway=pathway).exists()
     else:
@@ -82,6 +90,7 @@ def downvote_pathway_view(request, pathway_id):
 def pathway_comments_view(request, pathway_id):
     pathway = get_object_or_404(Pathway, id=pathway_id)
     
+    # Checking if the user is following the pathway, used for FollowPathway feature functionality
     if request.user.is_authenticated:
         is_user_following = request.user.followedpathway_set.filter(pathway=pathway).exists()
     else:
@@ -90,6 +99,7 @@ def pathway_comments_view(request, pathway_id):
     if request.method == "POST" and not request.user.is_authenticated:
         return HttpResponseForbidden("You need to login to comment.")
     
+    # Handling form submission
     if request.method == "POST" and request.user.is_authenticated:
         parent_comment_id = request.POST.get('parent_comment_id')
         parent_comment = None
@@ -104,6 +114,7 @@ def pathway_comments_view(request, pathway_id):
         )
         return redirect('pathway_comments', pathway_id=pathway_id)
 
+    # Fetching comments for the pathway
     comments = Comment.objects.filter(pathway=pathway, parent_comment=None)
     form = PathwayCommentsForm()
     return render(request, 'pathways/pathway_comments_template.html', {
@@ -118,6 +129,7 @@ def pathway_reply_view(request, comment_id):
     comment = get_object_or_404(Comment, id=comment_id)
     pathway = comment.pathway
 
+    # Handling form submission for replies
     if request.method == "POST":
         parent_reply_id = request.POST.get('parent_reply_id')
         parent_reply = None
@@ -144,6 +156,7 @@ def pathway_settings_view(request, pathway_id):
     pathway = get_object_or_404(Pathway, id=pathway_id)
     is_creator = (request.user == pathway.user)
 
+    # Handling form submission
     if request.method == 'POST':
         form = PathwaySettingsForm(request.POST, instance=pathway)
         if form.is_valid():
@@ -162,6 +175,8 @@ def pathway_settings_view(request, pathway_id):
 
 def follow_pathway(request, pathway_id):
     pathway = get_object_or_404(Pathway, id=pathway_id)
+
+    # Handling pathway following
     if request.user.is_authenticated:
         FollowedPathway.objects.create(user=request.user, pathway=pathway)
         return redirect('planning', pathway_id=pathway_id)
@@ -170,6 +185,8 @@ def follow_pathway(request, pathway_id):
     
 def unfollow_pathway(request, pathway_id):
     pathway = get_object_or_404(Pathway, id=pathway_id)
+
+    # Handling pathway unfollowing
     if request.user.is_authenticated:
         followed_pathway = FollowedPathway.objects.filter(user=request.user, pathway=pathway).first()
         if followed_pathway:

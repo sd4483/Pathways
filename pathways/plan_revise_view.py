@@ -10,11 +10,13 @@ def planning_view(request, pathway_id):
     to_study_tasks = []
     completed_tasks = []
 
+    # Checking if the user is following the pathway, used for FollowPathway feature functionality
     if request.user.is_authenticated:
         is_user_following = request.user.followedpathway_set.filter(pathway=pathway).exists()
     else:
         is_user_following = False
 
+    # Handling form submission
     if request.method == "POST":
         form = StudyTaskForm(request.POST)
         if form.is_valid():
@@ -30,6 +32,7 @@ def planning_view(request, pathway_id):
         if not (FollowedPathway.objects.filter(user=request.user, pathway=pathway).exists() or pathway.user == request.user):
             error_message = "You need to follow this pathway to plan or revise."
         else:
+            # Fetching tasks for authenticated users
             to_study_tasks = StudyTask.objects.filter(user=request.user, is_completed=False, pathway=pathway)
             completed_tasks = StudyTask.objects.filter(user=request.user, is_completed=True, pathway=pathway, is_visible=True)
     else:
@@ -50,35 +53,29 @@ def single_task_view(request, pathway_id, task_id):
     pathway = get_object_or_404(Pathway, id=pathway_id)
     task = get_object_or_404(StudyTask, id=task_id, user=request.user, pathway=pathway)
 
+    # Checking if the task has been added to revisions, if added, retrieve revision details
     is_added_to_revision = Revision.objects.filter(study_task=task).exists()
 
     revision_status = None
     completed_revisions = ["None"]
     revision_date_added = None
     task_retention_rate = 0
-    dates = []
 
+    # Checking if the user is following the pathway, used for FollowPathway feature functionality
     if request.user.is_authenticated:
         is_user_following = request.user.followedpathway_set.filter(pathway=pathway).exists()
     else:
         is_user_following = False
 
-    revision_entry = Revision.objects.filter(study_task=task).first()
-    if revision_entry:
-        print("first_revision_status:", revision_entry.first_revision_status)
-        print("second_revision_status:", revision_entry.second_revision_status)
-        print("third_revision_status:", revision_entry.third_revision_status)
-        print("fourth_revision_status:", revision_entry.fourth_revision_status)
-
-
+    # Fetching revision details if the task is added to revisions
     if is_added_to_revision:
         revisions_for_task = Revision.objects.filter(study_task=task)
         first_revision_entry = revisions_for_task.first()
         revision_date_added = first_revision_entry.created_date
         task_retention_rate = first_revision_entry.retention_rate
         revision_status = first_revision_entry.overall_status
-        dates = [revision_date_added + timedelta(days=i) for i in range(30)]
-
+        
+        # Determine which revisions are completed
         for revision in revisions_for_task:
             if revision.first_revision_status == Revision.COMPLETED:
                 completed_revisions.append("FIRST")
@@ -92,6 +89,7 @@ def single_task_view(request, pathway_id, task_id):
 
     count_of_revisions = 0
 
+    # Calculating the count of completed revisions
     if "None" in completed_revisions:
         count_of_revisions = 0
     else:
@@ -131,7 +129,6 @@ def clear_completed_tasks(request, pathway_id):
     pathway = get_object_or_404(Pathway, id=pathway_id)
     completed_tasks = StudyTask.objects.filter(pathway=pathway, user=request.user, is_completed=True)
     completed_tasks.update(is_visible=False)
-
     return redirect('planning', pathway_id=pathway.id)
 
 
@@ -141,11 +138,13 @@ def revision_view(request, pathway_id):
     user_revisions = []
     completed_revisions = []
 
+    # Checking if the user is following the pathway, used for FollowPathway feature functionality
     if request.user.is_authenticated:
         is_user_following = request.user.followedpathway_set.filter(pathway=pathway).exists()
     else:
         is_user_following = False  
-          
+
+    # Fetching revisions for authenticated users
     if request.user.is_authenticated:
         if not (FollowedPathway.objects.filter(user=request.user, pathway=pathway).exists() or pathway.user == request.user):
             error_message = "You need to follow this pathway to plan or revise."
@@ -164,7 +163,9 @@ def revision_view(request, pathway_id):
 
 def mark_revision_completed(request, revision_id):
     revision = get_object_or_404(Revision, id=revision_id)
-    
+
+    # Define mappings for revision types, statuses, and next due dates
+
     REVISION_TYPE_MAP = {
         Revision.FIRST: Revision.SECOND,
         Revision.SECOND: Revision.THIRD,
@@ -186,9 +187,11 @@ def mark_revision_completed(request, revision_id):
         Revision.FOURTH: timedelta(days=14),
     }
 
+    # For marking the current revision as completed before moving onto the next
     setattr(revision, REVISION_STATUS_MAP[revision.revision_type], Revision.COMPLETED)
     revision.save()
 
+    # Determine the next revision type and update accordingly
     next_revision_type = REVISION_TYPE_MAP[revision.revision_type]
 
     if next_revision_type == "completed":

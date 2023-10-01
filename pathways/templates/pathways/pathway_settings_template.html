@@ -3,6 +3,8 @@
 {% block pathway_content %}
     <div class="text-xl pb-2 font-bold">Settings for {{ pathway.title }}</div>
 
+    <!-- If user is creator of pathway, display settings -->
+
     {% if is_creator %}
 
     <div class="p-4 bg-slate-200 rounded mt-4 text-black">

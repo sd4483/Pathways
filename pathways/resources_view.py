@@ -12,11 +12,14 @@ from bs4 import BeautifulSoup
 
 def resource_archive_view(request, pathway_id):
     pathway = get_object_or_404(Pathway, pk=pathway_id)
+
+    # Initialize resource forms
     text_resource_form = TextResourceForm(prefix='text_resource')
     image_resource_form = ImageResourceForm(prefix='image_resource')
     link_resource_form = LinkResourceForm()
     file_resource_form = FileResourceForm()
 
+    # Checking if the user is following the pathway, used for FollowPathway feature functionality
     if request.user.is_authenticated:
         is_user_following = request.user.followedpathway_set.filter(pathway=pathway).exists()
     else:
@@ -34,20 +37,24 @@ def resource_archive_view(request, pathway_id):
 
 def resource_sorted_view(request, pathway_id):
     pathway = get_object_or_404(Pathway, pk=pathway_id)
+
+    # Initialize resource forms
     text_resource_form = TextResourceForm(prefix='text_resource')
     image_resource_form = ImageResourceForm(prefix='image_resource')
     link_resource_form = LinkResourceForm()
     file_resource_form = FileResourceForm()
 
+    # Fetching resources associated with the pathway and tagging them by type to display in the template
     text_resources = [(resource, 'text') for resource in pathway.text_resources.all()]
     image_resources = [(resource, 'image') for resource in pathway.image_resources.all()]
     file_resources = [(resource, 'file') for resource in pathway.file_resources.all()]
     link_resources = [(resource, 'link') for resource in pathway.link_resources.all()]
 
+    # Combine and sort resources by creation date
     resources = text_resources + image_resources + file_resources + link_resources
-    
     resources_sorted = sorted(resources, key=lambda x: x[0].created_at, reverse=True)
 
+    # Checking if the user is following the pathway, used for FollowPathway feature functionality
     if request.user.is_authenticated:
         is_user_following = request.user.followedpathway_set.filter(pathway=pathway).exists()
     else:
@@ -69,6 +76,7 @@ def text_resource_view(request, pathway_id):
     pathway = get_object_or_404(Pathway, pk=pathway_id)
     text_resource_form = TextResourceForm(request.POST or None, prefix='text_resource')
 
+    # Handling form submission
     if request.method == 'POST':
         if 'text_resource' in request.POST:
             if text_resource_form.is_valid():
@@ -77,6 +85,7 @@ def text_resource_view(request, pathway_id):
                 text_resource.created_by = request.user
                 text_resource.save()
 
+                # Redirect based on the path to the previous page or referer
                 if 'add-text' in request.path:
                     return redirect('resource_archive', pathway_id=pathway_id)
                 else:
@@ -90,9 +99,11 @@ def text_resource_view(request, pathway_id):
 def text_resource_delete_view(request, pathway_id, resource_id):
     text_resource = get_object_or_404(TextResource, pk=resource_id)
 
+    # Check user permissions
     if request.user != text_resource.created_by:
         raise PermissionDenied
 
+    # Handling resource deletion
     if request.method == "POST":
         text_resource.delete()
         referer_url = request.META.get('HTTP_REFERER', reverse('resource_sorted', args=[pathway_id]))
@@ -102,6 +113,7 @@ def text_resource_delete_view(request, pathway_id, resource_id):
 def link_resource_view(request, pathway_id):
     pathway = get_object_or_404(Pathway, pk=pathway_id)
 
+    # Handling form submission
     if request.method == 'POST':
         link_resource_form = LinkResourceForm(request.POST)
         if link_resource_form.is_valid():
@@ -109,6 +121,7 @@ def link_resource_view(request, pathway_id):
             link_resource.pathway = pathway
             link_resource.created_by = request.user
             
+            # Fetch additional data from the provided URL using fetch_title_and_image function
             title, image = fetch_title_and_image(link_resource.url) 
             link_resource.fetched_title = title
             link_resource.fetched_image_url = image
@@ -117,6 +130,7 @@ def link_resource_view(request, pathway_id):
             
             link_resource.save()
 
+            # Redirect based on the path to the previous page or referer
             referer_url = request.META.get('HTTP_REFERER', reverse('resource_sorted', args=[pathway_id]))
             return redirect(referer_url)
     else:
@@ -127,9 +141,11 @@ def link_resource_view(request, pathway_id):
 def link_resource_delete_view(request, pathway_id, resource_id):
     link_resource = get_object_or_404(LinkResource, pk=resource_id)
 
+    # Check user permissions
     if request.user != link_resource.created_by:
         raise PermissionDenied
 
+    # Handling resource deletion
     if request.method == "POST":
         link_resource.delete()
         referer_url = request.META.get('HTTP_REFERER', reverse('resource_sorted', args=[pathway_id]))
@@ -139,6 +155,7 @@ def image_resource_view(request, pathway_id):
     pathway = get_object_or_404(Pathway, pk=pathway_id)
     image_resource_form = ImageResourceForm(request.POST or None, request.FILES or None, prefix='image_resource')
 
+    # Handling form submission
     if request.method == 'POST':
         if 'image_resource' in request.POST:
             if image_resource_form.is_valid():
@@ -154,9 +171,11 @@ def image_resource_view(request, pathway_id):
 def image_resource_delete_view(request, pathway_id, resource_id):
     image_resource = get_object_or_404(ImageResource, pk=resource_id)
 
+    # Check user permissions
     if request.user != image_resource.created_by:
         raise PermissionDenied
 
+    # Handling resource deletion
     if request.method == "POST":
         image_resource.delete()
         referer_url = request.META.get('HTTP_REFERER', reverse('resource_sorted', args=[pathway_id]))
@@ -165,6 +184,7 @@ def image_resource_delete_view(request, pathway_id, resource_id):
 def file_resource_view(request, pathway_id):
     pathway = get_object_or_404(Pathway, pk=pathway_id)
 
+    # Handling form submission
     if request.method == 'POST':
         file_resource_form = FileResourceForm(request.POST or None, request.FILES or None)
         if file_resource_form.is_valid():
@@ -183,9 +203,11 @@ def file_resource_view(request, pathway_id):
 def file_resource_delete_view(request, pathway_id, resource_id):
     file_resource = get_object_or_404(FileResource, pk=resource_id)
 
+    # Check user permissions
     if request.user != file_resource.created_by:
         raise PermissionDenied
 
+    # Handling resource deletion
     if request.method == "POST":
         file_resource.delete()
         referer_url = request.META.get('HTTP_REFERER', reverse('resource_sorted', args=[pathway_id]))
@@ -193,16 +215,21 @@ def file_resource_delete_view(request, pathway_id, resource_id):
     
 
 def fetch_title_and_image(url):
+
+    # Define headers to mimic a browser request
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'}
     try:
+        # Fetch the content of the URL
         response = requests.get(url, headers=headers, timeout=10)
-        response.raise_for_status()  # Raise an error for bad responses
+        response.raise_for_status() 
         
+        # Parse the content using BeautifulSoup
         soup = BeautifulSoup(response.content, 'html.parser')
 
-        title = soup.title.string if soup.title else None
+        # Extract title and image from the parsed content
 
+        title = soup.title.string if soup.title else None
         og_title = soup.find('meta', attrs={"property": "og:title"})
         if og_title and og_title.attrs.get("content"):
             title = og_title.attrs["content"]
@@ -219,6 +246,7 @@ def fetch_title_and_image(url):
         return None, None
 
 def extract_domain(url):
+    # Parse the URL to extract the domain
     parsed_uri = urlparse(url)
-    domain = '{uri.netloc}'.format(uri=parsed_uri).replace("www.", "")  # remove 'www.' if it exists
+    domain = '{uri.netloc}'.format(uri=parsed_uri).replace("www.", "")
     return domain

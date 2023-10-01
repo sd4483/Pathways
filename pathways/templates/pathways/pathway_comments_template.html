@@ -47,7 +47,7 @@
                 {% csrf_token %}
                 {{ form.text }}
                 <input type="hidden" name="parent_reply_id" value="{{ reply.id }}">
-                <button type="submit" class="mt-2 bg-blue-600 text-white px-4 py-2 rounded">Post Nested Reply</button>
+                <button type="submit" class="mt-2 bg-blue-600 text-white px-4 py-2 rounded">Post Reply</button>
             </form>
         </div>
         {% endfor %}
@@ -62,7 +62,6 @@
     </div>
 {% endif %}
 
-<!-- JavaScript to toggle reply forms -->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         document.querySelectorAll('.reply-button').forEach(function(button) {
